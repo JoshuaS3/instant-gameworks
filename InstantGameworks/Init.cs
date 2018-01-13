@@ -2,16 +2,16 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 
-using Global.Services;
+using InstantGameworks;
 using System.Windows.Forms;
 
-namespace Global
+namespace InstantGameworks
 {
 
     class Init
     {
 
-        private static void DebugWriteLine(string output) => Console.WriteLine(SysTime.GetTime() + " " + output);
+        private static void DebugWriteLine(string output) => Console.WriteLine(Services.SysTime.GetTime() + " " + output);
 
         [STAThread]
         public static void Main()
@@ -22,10 +22,17 @@ namespace Global
 
 
             //Main
+            
+            Console.Title = "Instant Gameworks";
+
+            DebugWriteLine("Window init");
+            Graphics.GameworksWindow game = new Graphics.GameworksWindow();
+            DebugWriteLine("Window success");
+            game.Run(144,144);
+            
 
 
-
-            DebugWriteLine("Running");
+            
             DebugWriteLine("Shutting down");
 
 
