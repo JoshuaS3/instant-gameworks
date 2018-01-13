@@ -17,22 +17,24 @@ namespace InstantGameworks
         public static void Main()
         {
 
+            Console.Title = "Instant Gameworks";
             Console.WriteLine("Instant Gameworks (c)2018");
-            DebugWriteLine("Init");
 
 
             //Main
             
-            Console.Title = "Instant Gameworks";
-
+            DebugWriteLine("Init");
             DebugWriteLine("Window init");
             Graphics.GameworksWindow game = new Graphics.GameworksWindow();
             DebugWriteLine("Window success");
+            Services.ConsoleApp.HideConsole();
             game.Run(144,144);
-            
 
 
-            
+
+            //Exit
+
+            Services.ConsoleApp.ShowConsole();
             DebugWriteLine("Shutting down");
 
 

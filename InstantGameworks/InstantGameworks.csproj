@@ -47,7 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\OBJData.cs" />
+    <Compile Include="Graphics\LoadOBJ.cs" />
+    <Compile Include="Graphics\ObjectFactory.cs" />
+    <Compile Include="Graphics\RenderObject.cs" />
     <Compile Include="Graphics\ProgramObjectControl.cs" />
     <Compile Include="Graphics\Shaders.cs" />
     <Compile Include="Graphics\Window.cs" />
@@ -66,8 +68,12 @@
     </None>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
-    <None Include="Testing\monkey.mtl" />
-    <None Include="Testing\monkey.obj" />
+    <None Include="Testing\monkey.mtl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Testing\monkey.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

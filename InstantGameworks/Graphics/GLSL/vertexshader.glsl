@@ -1,11 +1,13 @@
-﻿#version 440 core
+﻿#version 450 core
 #line 2 "vertexshader.glsl"
 
-layout (location = 0) in float time;
-out vec4 frag_color;
+layout (location = 0) in vec4 position;
+layout (location = 1) in vec4 color;
+out vec4 vs_color;
+layout (location = 20) uniform mat4 modelView;
 
 void main(void)
 {
-	gl_Position = vec4(sin(time) * 0.5, cos(time) * 0.5, 0.0, 1.0);
-	frag_color = vec4(sin(time) * 0.25 + 0.75, cos(time) * 0.25 + 0.75, 0.0, 0.0);
+	vs_color = color;
+	gl_Position = modelView * position;
 }

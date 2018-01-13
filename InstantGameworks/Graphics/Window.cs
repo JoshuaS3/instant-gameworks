@@ -15,8 +15,8 @@ namespace InstantGameworks.Graphics
     {
         //Variables
         private int _program;
-        private int _vertexArray;
         private List<int> _shadersList = new List<int>();
+        private List<RenderObject> _renderObjects = new List<RenderObject>();
 
         //Init
         public GameworksWindow()
@@ -50,13 +50,26 @@ namespace InstantGameworks.Graphics
 
             Shaders.CompileShaders(_program, _shadersList);
 
+            //Create render objects
+            Tuple<List<Vertex>, List<List<int>>> monkey = LoadOBJ.Import(@"Testing\monkey.obj");
+            List<Vertex> vertexData = monkey.Item1;
+            List<List<int>> faceData = monkey.Item2;
+            foreach (List<int> face in faceData)
+            {
+                Vertex[] newFace =
+                {
+                    vertexData[face[0]-1], vertexData[face[1]-1], vertexData[face[2]-1]
+                };
+                _renderObjects.Add(new RenderObject(newFace));
+            }
+            
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.LineWidth(5f);
+            //GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
+
             //Debug
             string DebugInfo = GL.GetProgramInfoLog(_program);
             Console.WriteLine(string.IsNullOrEmpty(DebugInfo) ? "Graphics success" : DebugInfo);
-
-            //Create VAO
-            GL.GenVertexArrays(1, out _vertexArray);
-            GL.BindVertexArray(_vertexArray);
 
             //Add closed event
             Closed += OnExit;
@@ -76,16 +89,17 @@ namespace InstantGameworks.Graphics
             //Clear frame
             GL.ClearColor(Color.CornflowerBlue);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.Enable(EnableCap.DepthTest);
 
             //Render frame
 
-            GL.VertexAttrib1(0, _time);
-
             GL.UseProgram(_program);
-            GL.DrawArrays(PrimitiveType.Points, 0, 1);
-            GL.PointSize(10f);
-
-            GL.Flush();
+            GL.UniformMatrix4(20, false, ref _modelView);
+            foreach (var renderObject in _renderObjects)
+            {
+                renderObject.Render();
+            }
+            //GL.Flush();
             
 
             //Update frame
@@ -93,9 +107,17 @@ namespace InstantGameworks.Graphics
         }
 
         //Whenever a frame is updated (SwapBuffers)
+        private Matrix4 _modelView;
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
+            _time += e.Time;
+            var k = (float)_time * 0.05f;
+            var r1 = Matrix4.CreateRotationX(k * 3.0f);
+            var r2 = Matrix4.CreateRotationY(k * 3.0f);
+            var r3 = Matrix4.CreateRotationZ(k * 1.0f);
+            var t1 = Matrix4.CreateTranslation((float)(Math.Sin(k * 5f) * 0.5f), (float)(Math.Cos(k * 5f) * 0.5f), 0f);
+            _modelView = r1 * t1 * r2 * r3;
         }
 
         //When window resized
@@ -103,6 +125,10 @@ namespace InstantGameworks.Graphics
         {
             base.OnResize(e);
             GL.Viewport(0, 0, Width, Height);
+
+            Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, Width / (float)Height, 1.0f, 64.0f);
+            GL.UniformMatrix4(20, false, ref projection);
+
         }
 
         //Run code before exit
@@ -117,7 +143,10 @@ namespace InstantGameworks.Graphics
             {
                 Shaders.DeleteShader(shader);
             }
-            GL.DeleteVertexArrays(1, ref _vertexArray);
+            foreach (RenderObject obj in _renderObjects)
+            {
+                obj.Dispose();
+            }
             ProgramObjectControl.DeleteProgram(_program);
             base.Exit();
         }
