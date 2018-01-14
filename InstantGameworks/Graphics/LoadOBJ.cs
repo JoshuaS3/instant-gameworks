@@ -12,7 +12,7 @@ namespace InstantGameworks.Graphics
     class LoadOBJ
     {
 
-        public static Tuple< List<Vertex>, List<List<int>> > Import(string objFile)
+        public static Tuple< List<Vertex>, List<Vertex>, List<List<int>> > Import(string objFile)
         {
 
             string mtlFile = "";
@@ -21,6 +21,7 @@ namespace InstantGameworks.Graphics
 
 
             List<Vertex> vertexData = new List<Vertex>();
+            List<Vertex> vertexData2 = new List<Vertex>();
             List<List<int>> faceData = new List<List<int>>();
 
             foreach (string line in objData)
@@ -29,15 +30,20 @@ namespace InstantGameworks.Graphics
                 {
                     string newLine = line.Substring(2);
                     string[] data = newLine.Split(new char[] { ' ' });
-                    float x = float.Parse(data[0]) * 0.5f + 0.5f;
-                    float y = float.Parse(data[1]) * 0.5f + 0.5f;
-                    float z = float.Parse(data[2]) * 0.5f + 0.5f;
+                    float x = float.Parse(data[0]) * 2f + 0.5f;
+                    float y = float.Parse(data[1]) * 2f + 0.5f;
+                    float z = -float.Parse(data[2]) * 2f + 0.5f;
                     Vertex newVertex = new Vertex(
                         new Vector4(float.Parse(data[0]), float.Parse(data[1]), float.Parse(data[2]), 1.0f),
-                        new OpenTK.Graphics.Color4( x, y, z, 255 )
+                        new OpenTK.Graphics.Color4(x, y, z, 255)
+                    );
+                    Vertex newVertex2 = new Vertex(
+                        new Vector4(float.Parse(data[0]), float.Parse(data[1]), float.Parse(data[2]), 1.0f),
+                        new OpenTK.Graphics.Color4(255,255,255, 255)
                     );
                     vertexData.Add(newVertex);
-                    
+                    vertexData2.Add(newVertex2);
+
                 }
                 else if (line.StartsWith("f "))
                 {
@@ -59,7 +65,7 @@ namespace InstantGameworks.Graphics
 
             string[] mtlData = File.ReadAllLines( Directory.GetParent(@objFile).ToString() + "/" + mtlFile );
 
-            return Tuple.Create(vertexData, faceData);
+            return Tuple.Create(vertexData, vertexData2, faceData);
 
 
         }

@@ -59,6 +59,7 @@
     <Compile Include="Services\SysTime.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="aa.igw" />
     <None Include="App.config" />
     <None Include="Graphics\GLSL\fragmentshader.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -74,6 +75,14 @@
     <None Include="Testing\monkey.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Extra\InstantGameworks.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Extra\InstantGameworks.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

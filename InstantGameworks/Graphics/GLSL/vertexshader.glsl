@@ -4,10 +4,11 @@
 layout (location = 0) in vec4 position;
 layout (location = 1) in vec4 color;
 out vec4 vs_color;
-layout (location = 20) uniform mat4 modelView;
+layout (location = 2) uniform mat4 modelView;
+layout (location = 3) uniform mat4 projection;
 
 void main(void)
 {
 	vs_color = color;
-	gl_Position = modelView * position;
+	gl_Position = projection * modelView * position;
 }

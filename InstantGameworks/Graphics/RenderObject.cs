@@ -52,6 +52,8 @@ namespace InstantGameworks.Graphics
             GL.VertexArrayAttribFormat(_vertexArray, 1, 4, VertexAttribType.Float, false, 16);
 
             GL.VertexArrayVertexBuffer(_vertexArray, 0, _buffer, IntPtr.Zero, Vertex.Size);
+            
+            GL.BindVertexArray(_vertexArray);
 
 
             _initialized = true;

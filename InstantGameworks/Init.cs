@@ -8,6 +8,9 @@ using System.Windows.Forms;
 namespace InstantGameworks
 {
 
+    /**
+     <summary> Hello, World! </summary>
+     */
     class Init
     {
 
