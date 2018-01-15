@@ -47,10 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\Import\InstantGameworksObject.cs" />
+    <Compile Include="Graphics\Object3D.cs" />
     <Compile Include="Graphics\LoadOBJ.cs" />
     <Compile Include="Graphics\ObjectFactory.cs" />
     <Compile Include="Graphics\RenderObject.cs" />
-    <Compile Include="Graphics\ProgramObjectControl.cs" />
     <Compile Include="Graphics\Shaders.cs" />
     <Compile Include="Graphics\Window.cs" />
     <Compile Include="Init.cs" />
@@ -59,7 +60,6 @@
     <Compile Include="Services\SysTime.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="aa.igw" />
     <None Include="App.config" />
     <None Include="Graphics\GLSL\fragmentshader.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

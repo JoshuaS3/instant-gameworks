@@ -43,7 +43,7 @@ namespace InstantGameworks.Graphics
             base.OnLoad(e);
 
             //Create program
-            _program = ProgramObjectControl.CreateProgram();
+            _program = GL.CreateProgram();
 
             //Adjust render settings
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
@@ -97,7 +97,7 @@ namespace InstantGameworks.Graphics
         {
             base.OnRenderFrame(e);
             _time += e.Time;
-            Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") FPS: " + (1f/e.Time);
+            Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f/e.Time) + "fps";
 
 
 
@@ -142,7 +142,7 @@ namespace InstantGameworks.Graphics
             var r1 = Matrix4.CreateRotationX((float)Math.Cos(_time * 0.75f) * 0.1f);
             var r2 = Matrix4.CreateRotationY((float)Math.Sin(_time * 0.5f) * 0.1f + 0.4f);
             var r3 = Matrix4.CreateRotationZ((float)Math.Sin(_time * 0.5f) * 0.125f);
-            var t1 = Matrix4.CreateTranslation((float)(Math.Sin(k) * 0.1f), (float)(Math.Cos(k * 5f) * 0.025f), -0.375f);
+            var t1 = Matrix4.CreateTranslation((float)(Math.Sin(k) * 0.01f), (float)(Math.Cos(k * 5f) * 0.025f), -0.375f);
             _modelView = r1 * r2 * r3 * t1;
         }
 
@@ -178,7 +178,7 @@ namespace InstantGameworks.Graphics
             {
                 obj.Dispose();
             }
-            ProgramObjectControl.DeleteProgram(_program);
+            GL.DeleteProgram(_program);
             base.Exit();
         }
     }

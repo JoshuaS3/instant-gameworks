@@ -11,7 +11,7 @@ namespace InstantGameworks.Graphics
     class ObjectFactory
     {
 
-        public static Vertex[] CreateSolidCube(float side, Color4 color)
+        public static RenderObject CreateSolidCube(float side, Color4 color)
         {
             side = side / 2f;
             Vertex[] vertices =
@@ -19,6 +19,7 @@ namespace InstantGameworks.Graphics
                 new Vertex(new Vector4(-side, -side, -side, 1.0f),   color),
                 new Vertex(new Vector4(-side, -side, side, 1.0f),    color),
                 new Vertex(new Vector4(-side, side, -side, 1.0f),    color),
+
                 new Vertex(new Vector4(-side, side, -side, 1.0f),    color),
                 new Vertex(new Vector4(-side, -side, side, 1.0f),    color),
                 new Vertex(new Vector4(-side, side, side, 1.0f),     color),
@@ -26,6 +27,7 @@ namespace InstantGameworks.Graphics
                 new Vertex(new Vector4(side, -side, -side, 1.0f),    color),
                 new Vertex(new Vector4(side, side, -side, 1.0f),     color),
                 new Vertex(new Vector4(side, -side, side, 1.0f),     color),
+
                 new Vertex(new Vector4(side, -side, side, 1.0f),     color),
                 new Vertex(new Vector4(side, side, -side, 1.0f),     color),
                 new Vertex(new Vector4(side, side, side, 1.0f),      color),
@@ -33,6 +35,7 @@ namespace InstantGameworks.Graphics
                 new Vertex(new Vector4(-side, -side, -side, 1.0f),   color),
                 new Vertex(new Vector4(side, -side, -side, 1.0f),    color),
                 new Vertex(new Vector4(-side, -side, side, 1.0f),    color),
+
                 new Vertex(new Vector4(-side, -side, side, 1.0f),    color),
                 new Vertex(new Vector4(side, -side, -side, 1.0f),    color),
                 new Vertex(new Vector4(side, -side, side, 1.0f),     color),
@@ -40,6 +43,7 @@ namespace InstantGameworks.Graphics
                 new Vertex(new Vector4(-side, side, -side, 1.0f),    color),
                 new Vertex(new Vector4(-side, side, side, 1.0f),     color),
                 new Vertex(new Vector4(side, side, -side, 1.0f),     color),
+
                 new Vertex(new Vector4(side, side, -side, 1.0f),     color),
                 new Vertex(new Vector4(-side, side, side, 1.0f),     color),
                 new Vertex(new Vector4(side, side, side, 1.0f),      color),
@@ -47,6 +51,7 @@ namespace InstantGameworks.Graphics
                 new Vertex(new Vector4(-side, -side, -side, 1.0f),   color),
                 new Vertex(new Vector4(-side, side, -side, 1.0f),    color),
                 new Vertex(new Vector4(side, -side, -side, 1.0f),    color),
+
                 new Vertex(new Vector4(side, -side, -side, 1.0f),    color),
                 new Vertex(new Vector4(-side, side, -side, 1.0f),    color),
                 new Vertex(new Vector4(side, side, -side, 1.0f),     color),
@@ -54,11 +59,12 @@ namespace InstantGameworks.Graphics
                 new Vertex(new Vector4(-side, -side, side, 1.0f),    color),
                 new Vertex(new Vector4(side, -side, side, 1.0f),     color),
                 new Vertex(new Vector4(-side, side, side, 1.0f),     color),
+
                 new Vertex(new Vector4(-side, side, side, 1.0f),     color),
                 new Vertex(new Vector4(side, -side, side, 1.0f),     color),
                 new Vertex(new Vector4(side, side, side, 1.0f),      color),
             };
-            return vertices;
+            return new RenderObject(vertices);
         }
 
     }

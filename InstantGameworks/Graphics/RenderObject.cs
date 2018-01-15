@@ -30,17 +30,17 @@ namespace InstantGameworks.Graphics
         private bool _initialized;
         private readonly int _vertexArray;
         private readonly int _buffer;
-        private readonly int _verticeCount;
+        private readonly int _vertexCount;
 
         public RenderObject(Vertex[] vertices)
         {
-            _verticeCount = vertices.Length;
+            _vertexCount = vertices.Length;
 
             _vertexArray = GL.GenVertexArray();
             _buffer = GL.GenBuffer();
             GL.BindVertexArray(_vertexArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _buffer);
-            GL.NamedBufferStorage(_buffer, Vertex.Size * _verticeCount, vertices, BufferStorageFlags.MapWriteBit);
+            GL.NamedBufferStorage(_buffer, Vertex.Size * _vertexCount, vertices, BufferStorageFlags.MapWriteBit);
 
             //Attributes (Position first, then Color)
             GL.VertexArrayAttribBinding(_vertexArray, 0, 0);
@@ -54,14 +54,13 @@ namespace InstantGameworks.Graphics
             GL.VertexArrayVertexBuffer(_vertexArray, 0, _buffer, IntPtr.Zero, Vertex.Size);
             
             GL.BindVertexArray(_vertexArray);
-
-
+            
             _initialized = true;
         }
         public void Render()
         {
             GL.BindVertexArray(_vertexArray);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, _verticeCount);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, _vertexCount);
         }
 
         public void Dispose()
