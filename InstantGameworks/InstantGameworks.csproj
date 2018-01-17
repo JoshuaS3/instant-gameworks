@@ -49,11 +49,9 @@
   <ItemGroup>
     <Compile Include="Graphics\Import\InstantGameworksObject.cs" />
     <Compile Include="Graphics\Object3D.cs" />
-    <Compile Include="Graphics\LoadOBJ.cs" />
     <Compile Include="Graphics\ObjectFactory.cs" />
-    <Compile Include="Graphics\RenderObject.cs" />
     <Compile Include="Graphics\Shaders.cs" />
-    <Compile Include="Graphics\Window.cs" />
+    <Compile Include="Graphics\GameworksWindow.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConsoleApp.cs" />
@@ -69,10 +67,7 @@
     </None>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
-    <None Include="Testing\monkey.mtl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Testing\monkey.obj">
+    <None Include="Testing\airplane.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -84,5 +79,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

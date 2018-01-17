@@ -4,13 +4,10 @@ using System.Threading;
 
 using InstantGameworks;
 using System.Windows.Forms;
+using OpenTK;
 
 namespace InstantGameworks
 {
-
-    /**
-     <summary> Hello, World! </summary>
-     */
     class Init
     {
 
@@ -25,21 +22,21 @@ namespace InstantGameworks
 
 
             //Main
-            
             DebugWriteLine("Init");
             DebugWriteLine("Window init");
+
             Graphics.GameworksWindow game = new Graphics.GameworksWindow();
             DebugWriteLine("Window success");
-            Services.ConsoleApp.HideConsole();
+            //Services.ConsoleApp.HideConsole();
             game.Run(144,144);
-
+            
+            
 
 
             //Exit
 
             Services.ConsoleApp.ShowConsole();
             DebugWriteLine("Shutting down");
-
 
         }
 
