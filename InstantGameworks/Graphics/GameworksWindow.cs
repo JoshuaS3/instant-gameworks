@@ -20,26 +20,30 @@ namespace InstantGameworks.Graphics
         //Variables
         private int _program;
         private List<int> _shadersList = new List<int>();
-        private List<Object3D> _renderObjects = new List<Object3D>();
-        private Matrix4 _projectionMatrix;
+        private Matrix4 _cameraMatrix;
 
-        public Object3D Airplane;
+
+        public Camera Camera = new Camera();
+        public List<Object3D> RenderObjects = new List<Object3D>();
+
 
         //Init
         public GameworksWindow()
             :base(1280, //Width
-                 720, //Height
-                 OpenTK.Graphics.GraphicsMode.Default, //GraphicsMode
-                 "InstantGameworks", //Title
-                 GameWindowFlags.FixedWindow, //Flags
-                 DisplayDevice.Default, //Which monitor
-                 4, //Major
-                 0, //Minor
-                 OpenTK.Graphics.GraphicsContextFlags.Default) //Context flags
+                  720, //Height
+                  GraphicsMode.Default, //GraphicsMode
+                  "InstantGameworks", //Title
+                  GameWindowFlags.FixedWindow, //Flags
+                  DisplayDevice.Default, //Which monitor
+                  4, //Major
+                  0, //Minor
+                  GraphicsContextFlags.Default) //Context flags
         {
             Title += " (OpenGL " + GL.GetString(StringName.Version) + ")";
             CursorVisible = true;
             Icon = new Icon(@"Extra\InstantGameworks.ico");
+            VSync = VSyncMode.Off;
+            
         }
 
         //On initial load
@@ -55,8 +59,7 @@ namespace InstantGameworks.Graphics
             GL.LineWidth(0f);
             GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
             GL.Enable(EnableCap.DepthTest);
-            
-            CreateProjection();
+            GL.Enable(EnableCap.Multisample);
 
 
             //Create and compile shaders
@@ -66,12 +69,6 @@ namespace InstantGameworks.Graphics
             _shadersList.Add(fragmentShader);
 
             Shaders.CompileShaders(_program, _shadersList);
-
-            //Create render objects
-            var airplaneVerts = InstantGameworksObject.Import(@"Testing\airplane.igwo");
-            Object3D object3D = new Object3D(airplaneVerts.Item1, airplaneVerts.Item2, airplaneVerts.Item3, airplaneVerts.Item4, airplaneVerts.Item5);
-            _renderObjects.Add(object3D);
-            Airplane = object3D;
             
 
 
@@ -88,64 +85,62 @@ namespace InstantGameworks.Graphics
         private double _time;
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            base.OnRenderFrame(e);
-            _time += e.Time;
-            Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f/e.Time) + "fps";
-
-
-
-            //Adjust viewport
-            GL.Viewport(0, 0, Width, Height);
-            
-            //Clear frame
-            GL.ClearColor(Color.CornflowerBlue);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-            //Render frame
-
-            GL.UseProgram(_program);
-            GL.UniformMatrix4(3, false, ref _projectionMatrix);
-
-
-            foreach (var renderObject in _renderObjects)
+            if (Focused)
             {
-                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                renderObject.Render();
+                base.OnRenderFrame(e);
+                _time += e.Time;
+                Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f / e.Time) + "fps";
+
+
+
+                //Adjust viewport
+                GL.Viewport(0, 0, Width, Height);
+
+                //Clear frame
+                GL.ClearColor(Color.CornflowerBlue);
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+                //Render frame
+
+                GL.UseProgram(_program);
+
+
+
+                Camera.AspectRatio = (float)Width / Height;
+                Camera.Update();
+                _cameraMatrix = Camera.PerspectiveMatrix;
+                GL.UniformMatrix4(3, false, ref _cameraMatrix);
+
+
+                foreach (var renderObject in RenderObjects)
+                {
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                    renderObject.Render();
+                }
+
+
+                //Update frame
+                SwapBuffers();
             }
-            
-
-            //Update frame
-            SwapBuffers();
         }
-
-        //Whenever a frame is updated (SwapBuffers)
-        protected override void OnUpdateFrame(FrameEventArgs e)
+        
+        public Object3D AddObject(Tuple<Vertex[], Vector4[], Color4[], Vector3[], Vector3[]> IGWOContent)
         {
-            base.OnUpdateFrame(e);
-            _time += e.Time;
-            var k = (float)_time * 0.375f;
-            Airplane.Rotation = new Vector3((float)Math.Cos(_time * 0.75f) * 0.1f,
-                                            (float)Math.Sin(_time * 0.5f) * 0.1f + 0.4f,
-                                            (float)Math.Sin(_time * 0.5f) * 0.125f);
-            Airplane.Position = new Vector3((float)(Math.Sin(k) * 0.01f), (float)(Math.Cos(k * 5f) * 0.025f), -0.375f);
-            Airplane.Scale = new Vector3((float)Math.Sin(_time) * 0.25f + 1f, (float)Math.Sin(_time) * 0.25f + 1f, (float)Math.Sin(_time) * 0.25f + 1f);
+            Object3D newObject = new Object3D(IGWOContent);
+            RenderObjects.Add(newObject);
+            return newObject;
         }
-
-        //Adjust projection
-        private void CreateProjection()
+        public Object3D AddObject(Vertex[] drawData,
+                                  Vector4[] vertexPositions,
+                                  Color4[] vertexColors,
+                                  Vector3[] vertexNormals, // 
+                                  Vector3[] vertexTextureCoordinates)
         {
-            var aspectRatio = (float)Width / Height;
-            _projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(90 * ((float)Math.PI / 180f), aspectRatio, 0.01f, 4000f);
+            Object3D newObject = new Object3D(drawData, vertexPositions, vertexColors, vertexNormals, vertexTextureCoordinates);
+            RenderObjects.Add(newObject);
+            return newObject;
         }
 
-        //When window resized
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            GL.Viewport(0, 0, Width, Height);
-            CreateProjection();
-
-        }
 
         //Run code before exit
         private void OnExit(object sender, EventArgs eventArgs)
@@ -159,7 +154,7 @@ namespace InstantGameworks.Graphics
             {
                 Shaders.DeleteShader(shader);
             }
-            foreach (Object3D obj in _renderObjects)
+            foreach (Object3D obj in RenderObjects)
             {
                 obj.Dispose();
             }

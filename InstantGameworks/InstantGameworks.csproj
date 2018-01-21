@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
+      <HintPath>..\packages\OpenTK.3.0.0-git00038\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\Import\InstantGameworksObject.cs" />
     <Compile Include="Graphics\Object3D.cs" />
     <Compile Include="Graphics\ObjectFactory.cs" />
@@ -68,6 +69,12 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Testing\airplane.igwo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Testing\MONKEY.igwo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Testing\untitled.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

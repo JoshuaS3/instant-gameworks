@@ -187,7 +187,7 @@ namespace InstantGameworks.Graphics.Import
             Vector3[] VertexTextureCoords = textureList.Count > 0 ? new Vector3[textureList.Count] : new Vector3[0];
 
 
-            Vertex[] DrawData = new Vertex[(faces.Length * 3) - 1]; // whitespace at end of array
+            Vertex[] DrawData = new Vertex[(faces.Length * 3)];
 
 
             int faceCount = 0;
@@ -207,7 +207,7 @@ namespace InstantGameworks.Graphics.Import
 
                         VertexPositions[vertexIndex] = new Vector4(positionList[vertexIndex], 1.0f);
                         thisVertex.Position = VertexPositions[vertexIndex];
-                        thisVertex.Color = new Color4(VertexPositions[vertexIndex].X + 0.4f, VertexPositions[vertexIndex].Y * 0.2f + 0.5f, VertexPositions[vertexIndex].Z + 0.2f, 1);
+                        thisVertex.Color = new Color4(VertexPositions[vertexIndex].X * 0.2f + 0.75f, VertexPositions[vertexIndex].Y * 0.1f + 0.8f, VertexPositions[vertexIndex].Z * 0.35f+0.5f, 1);
                         if (VertexColors.Length != 0)
                         {
                             VertexColors[vertexIndex] = colorList[vertexIndex];

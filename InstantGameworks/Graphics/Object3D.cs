@@ -32,18 +32,32 @@ namespace InstantGameworks.Graphics
         //private static Vertex[] _actualDraw;
 
         private bool _initialized;
-        private readonly int _objectArray;
+        private int _objectArray;
 
         private int _vertexPositionBuffer;
         private Matrix4 _modelView;
 
         private int _vertexCount;
 
+        public Object3D(Tuple<Vertex[], Vector4[], Color4[], Vector3[], Vector3[]> data) // 
+        {
+            Init(data.Item1, data.Item2, data.Item3, data.Item4, data.Item5);
+        }
+
         public Object3D(Vertex[] drawData,
                         Vector4[] vertexPositions,
                         Color4[] vertexColors,
                         Vector3[] vertexNormals, // 
                         Vector3[] vertexTextureCoordinates) // 
+        {
+            Init(drawData, vertexPositions, vertexColors, vertexNormals, vertexTextureCoordinates);
+        }
+
+        protected virtual void Init(Vertex[] drawData,
+                                    Vector4[] vertexPositions,
+                                    Color4[] vertexColors,
+                                    Vector3[] vertexNormals, // 
+                                    Vector3[] vertexTextureCoordinates) // 
         {
             DrawData = drawData;
             VertexPositions = vertexPositions;
@@ -82,7 +96,7 @@ namespace InstantGameworks.Graphics
             Color = new Color4(0, 0, 0, 1.0f);
             DoRender = true;
 
-        _initialized = true;
+            _initialized = true;
         }
 
         public void Render()
