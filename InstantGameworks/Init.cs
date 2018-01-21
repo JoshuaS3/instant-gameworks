@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -59,8 +60,8 @@ namespace InstantGameworks
             RefreshRate = 0;
             WindowSize = new Vector2(1920, 1080);
             WindowPosition = new Vector2(0, 0);
-            WindowBorder = WindowBorder.Fixed;
-            WindowState = WindowState.Fullscreen;
+            WindowBorder = WindowBorder.Hidden;
+            WindowState = WindowState.Maximized;
 
             //Create window
             ThreadStart GameThread = new ThreadStart(OpenWindow);
@@ -70,22 +71,24 @@ namespace InstantGameworks
             //Wait for window
             while (Window == null) { } //Wait until window initiates
 
+            //Add game objects
             StudioCamera Camera = new StudioCamera();
-            Window.Load += (sender, e) =>
-            {
-                Object3D Airplane = Window.AddObject(InstantGameworksObject.Import(@"Testing\MONKEY.igwo"));
-                Airplane.Scale = new Vector3(1, 1, 1);
-                Airplane.Position = new Vector3(0, 0, -4);
-
-                Object3D land = Window.AddObject(InstantGameworksObject.Import(@"Testing\untitled.igwo"));
-                land.Position = new Vector3(0, -5, 0);
-                Window.RenderObjects.Add(land);
-
-                Window.Camera = Camera;
-            };
+            Camera.MoveSensitivity = 0.003f;
+            Window.Camera = Camera;
 
 
+            var land = Window.AddObject(@"Testing\untitled.igwo");
+            land.Scale = new Vector3(5, 5, 5);
+            land.Position = new Vector3(0, -25, 0);
+            DebugWriteLine("untitled.igwo");
 
+            var Airplane = Window.AddObject(@"Testing\airplane.igwo");
+            Airplane.Scale = new Vector3(5, 5, 5);
+            Airplane.Position = new Vector3(0, 0, -4);
+            DebugWriteLine("airplane.igwo");
+
+
+            bool[] KeysDown = new bool[] { false, false, false, false };
 
             double _time = 0;
             float k;
@@ -93,10 +96,27 @@ namespace InstantGameworks
             {
                 _time += e.Time;
                 k = (float)_time * 3;
-                Window.RenderObjects[0].Rotation = new Vector3((float)Math.Cos(_time * 0.75f) * 0.1f,
+                Airplane.Rotation = new Vector3((float)Math.Cos(_time * 0.75f) * 0.1f,
                                                 (float)Math.Sin(_time * 0.5f) * 0.1f + 0.4f,
                                                 (float)Math.Sin(_time * 0.5f) * 0.125f);
-                Window.RenderObjects[0].Position = new Vector3((float)(Math.Sin(k) * 0.01f), (float)(Math.Cos(k * 5f) * 0.025f), -4.0f);
+                Airplane.Position = new Vector3((float)(Math.Sin(k) * 0.01f), (float)(Math.Cos(k * 5f) * 0.025f), -4.0f);
+                
+                if (KeysDown[0] == true)
+                {
+                    Camera.Move(0, 0, -1);
+                }
+                if (KeysDown[1] == true)
+                {
+                    Camera.Move(1, 0, 0);
+                }
+                if (KeysDown[2] == true)
+                {
+                    Camera.Move(0, 0, 1);
+                }
+                if (KeysDown[3] == true)
+                {
+                    Camera.Move(-1, 0, 0);
+                }
             }
 
 
@@ -128,38 +148,56 @@ namespace InstantGameworks
                     Camera.AddRotation(e.XDelta, e.YDelta);
                 }
             }
-            void KeyDown(object sender, KeyPressEventArgs e)
+            void KeyDown(object sender, KeyboardKeyEventArgs e)
             {
-                switch (char.ToLower(e.KeyChar))
+                if (e.Key == Key.W)
                 {
-                    case 'w':
-                        Camera.Move(0, 0, -1);
-                        break;
-                    case 'a':
-                        Camera.Move(1, 0, 0);
-                        break;
-                    case 's':
-                        Camera.Move(0, 0, 1);
-                        break;
-                    case 'd':
-                        Camera.Move(-1, 0, 0);
-                        break;
-                    case 'q':
-                        Camera.Move(0, 1, 0);
-                        break;
-                    case 'e':
-                        Camera.Move(0, -1, 0);
-                        break;
+                    KeysDown[0] = true;
+                } else if (e.Key == Key.A)
+                {
+                    KeysDown[1] = true;
+                } else if (e.Key == Key.S)
+                {
+                    KeysDown[2] = true;
+                } else if (e.Key == Key.D)
+                {
+                    KeysDown[3] = true;
                 }
+            }
+            void KeyUp(object sender, KeyboardKeyEventArgs e)
+            {
+                if (e.Key == Key.W)
+                {
+                    KeysDown[0] = false;
+                }
+                else if (e.Key == Key.A)
+                {
+                    KeysDown[1] = false;
+                }
+                else if (e.Key == Key.S)
+                {
+                    KeysDown[2] = false;
+                }
+                else if (e.Key == Key.D)
+                {
+                    KeysDown[3] = false;
+                }
+            }
+            void MouseWheel(object sender, MouseWheelEventArgs e)
+            {
+                Camera.Move(0, 0, -e.Delta / Camera.MoveSensitivity);
             }
             Window.UpdateFrame += OnUpdateFrame;
             Window.MouseDown += MouseDown;
             Window.MouseUp += MouseUp;
             Window.MouseMove += MouseMove;
-            Window.KeyPress += KeyDown;
+            Window.KeyDown += KeyDown;
+            Window.KeyUp += KeyUp;
+            Window.MouseWheel += MouseWheel;
 
-            
+
             //Exit
+            while (Window.Exists) { }
             DebugWriteLine("Shutting down");
 
         }

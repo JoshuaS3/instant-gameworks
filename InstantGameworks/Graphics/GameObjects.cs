@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +13,60 @@ using InstantGameworks.Graphics.Import;
 
 namespace InstantGameworks.Graphics
 {
-
-    public class Object3D : IDisposable
+    public class Instance : IDisposable
     {
+        private List<string> _inherits = new List<string>() { };
+
+        public bool Archivable { get; set; } = true;
+        public virtual string ClassName { get; } = "Instance";
+        public virtual string Name { get; set; } = "Instance";
+        
+        
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public bool Inherits(string className)
+        {
+            if (_inherits.Contains(className))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void Dispose()
+        {
+            Name = null;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+        }
+    }
+
+    public class LightSource : Instance
+    {
+        private List<string> _inherits = new List<string>() { "Instance" };
+
+        public override string ClassName { get; } = "LightSource";
+        public override string Name { get; set; } = "LightSource";
+
+        public Color4 Color { get; set; }
+        public float Intensity { get; set; }
+        public float Radius { get; set; }
+    }
+
+
+    public class Object3D : Instance
+    {
+        private List<string> _inherits = new List<string>() { "Instance" };
+
+        public override string ClassName { get; } = "Object3D";
+        public override string Name { get; set; } = "Object3D";
+
         public Vector3 Position { get; set; }
         public Vector3 Scale { get; set; }
         public Vector3 Rotation { get; set; }
@@ -59,6 +111,7 @@ namespace InstantGameworks.Graphics
                                     Vector3[] vertexNormals, // 
                                     Vector3[] vertexTextureCoordinates) // 
         {
+
             DrawData = drawData;
             VertexPositions = vertexPositions;
             VertexColors = vertexColors;
@@ -111,13 +164,8 @@ namespace InstantGameworks.Graphics
             GL.BindVertexArray(_objectArray);
             GL.DrawArrays(PrimitiveType.Triangles, 0, _vertexCount);
         }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected virtual void Dispose(bool disposing)
+        
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

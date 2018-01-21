@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\Import\InstantGameworksObject.cs" />
-    <Compile Include="Graphics\Object3D.cs" />
+    <Compile Include="Graphics\GameObjects.cs" />
     <Compile Include="Graphics\ObjectFactory.cs" />
     <Compile Include="Graphics\Shaders.cs" />
     <Compile Include="Graphics\GameworksWindow.cs" />

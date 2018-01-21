@@ -31,7 +31,7 @@ namespace InstantGameworks.Graphics
         public GameworksWindow()
             :base(1280, //Width
                   720, //Height
-                  GraphicsMode.Default, //GraphicsMode
+                  new GraphicsMode(32, 8, 0, 8), //GraphicsMode
                   "InstantGameworks", //Title
                   GameWindowFlags.FixedWindow, //Flags
                   DisplayDevice.Default, //Which monitor
@@ -85,12 +85,11 @@ namespace InstantGameworks.Graphics
         private double _time;
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            if (Focused)
-            {
+            //if (Focused)
+            //{
                 base.OnRenderFrame(e);
                 _time += e.Time;
                 Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f / e.Time) + "fps";
-
 
 
                 //Adjust viewport
@@ -121,12 +120,21 @@ namespace InstantGameworks.Graphics
 
                 //Update frame
                 SwapBuffers();
-            }
+            //}
         }
-        
-        public Object3D AddObject(Tuple<Vertex[], Vector4[], Color4[], Vector3[], Vector3[]> IGWOContent)
+
+
+        public Object3D AddObject(string fileName)
         {
-            Object3D newObject = new Object3D(IGWOContent);
+            var newObjectData = InstantGameworksObject.Import(fileName);
+            Object3D newObject = null;
+            void Add(object sender, FrameEventArgs e)
+            {
+                newObject = new Object3D(newObjectData);
+                UpdateFrame -= Add;
+            }
+            UpdateFrame += Add;
+            while (newObject == null) { }
             RenderObjects.Add(newObject);
             return newObject;
         }
@@ -136,10 +144,20 @@ namespace InstantGameworks.Graphics
                                   Vector3[] vertexNormals, // 
                                   Vector3[] vertexTextureCoordinates)
         {
-            Object3D newObject = new Object3D(drawData, vertexPositions, vertexColors, vertexNormals, vertexTextureCoordinates);
+            var newObjectData = new Tuple<Vertex[], Vector4[], Color4[], Vector3[], Vector3[]>(drawData, vertexPositions, vertexColors, vertexNormals, vertexTextureCoordinates);
+
+            Object3D newObject = null;
+            void Add(object sender, FrameEventArgs e)
+            {
+                newObject = new Object3D(newObjectData);
+                UpdateFrame -= Add;
+            }
+            UpdateFrame += Add;
+            while (newObject == null) { }
             RenderObjects.Add(newObject);
             return newObject;
         }
+
 
 
         //Run code before exit
