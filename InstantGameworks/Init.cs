@@ -60,8 +60,8 @@ namespace InstantGameworks
             RefreshRate = 0;
             WindowSize = new Vector2(1920, 1080);
             WindowPosition = new Vector2(0, 0);
-            WindowBorder = WindowBorder.Hidden;
-            WindowState = WindowState.Maximized;
+            WindowBorder = WindowBorder.Fixed;
+            WindowState = WindowState.Fullscreen;
 
             //Create window
             ThreadStart GameThread = new ThreadStart(OpenWindow);
@@ -70,7 +70,7 @@ namespace InstantGameworks
 
             //Wait for window
             while (Window == null) { } //Wait until window initiates
-
+            
             //Add game objects
             StudioCamera Camera = new StudioCamera();
             Camera.MoveSensitivity = 0.003f;
@@ -80,15 +80,15 @@ namespace InstantGameworks
             var land = Window.AddObject(@"Testing\untitled.igwo");
             land.Scale = new Vector3(5, 5, 5);
             land.Position = new Vector3(0, -25, 0);
-            DebugWriteLine("untitled.igwo");
+            
 
             var Airplane = Window.AddObject(@"Testing\airplane.igwo");
-            Airplane.Scale = new Vector3(5, 5, 5);
+            Airplane.Scale = new Vector3(10, 10, 10);
             Airplane.Position = new Vector3(0, 0, -4);
-            DebugWriteLine("airplane.igwo");
+            
+            
 
-
-            bool[] KeysDown = new bool[] { false, false, false, false };
+            bool[] KeysDown = new bool[] { false, false, false, false, false, false };
 
             double _time = 0;
             float k;
@@ -117,12 +117,22 @@ namespace InstantGameworks
                 {
                     Camera.Move(-1, 0, 0);
                 }
+                if (KeysDown[4] == true)
+                {
+                    Camera.Move(0, -1, 0);
+                }
+                if (KeysDown[5] == true)
+                {
+                    Camera.Move(0, 1, 0);
+                }
             }
+
 
 
 
             Vector2 mouseLastPos = new Vector2(0, 0);
             bool isRightMouseDown = false;
+            Random pos = new Random();
             void MouseDown(object sender, MouseButtonEventArgs e)
             {
                 if (e.Button == MouseButton.Right)
@@ -163,6 +173,14 @@ namespace InstantGameworks
                 {
                     KeysDown[3] = true;
                 }
+                else if (e.Key == Key.Q)
+                {
+                    KeysDown[4] = true;
+                }
+                else if (e.Key == Key.E)
+                {
+                    KeysDown[5] = true;
+                }
             }
             void KeyUp(object sender, KeyboardKeyEventArgs e)
             {
@@ -182,6 +200,14 @@ namespace InstantGameworks
                 {
                     KeysDown[3] = false;
                 }
+                else if (e.Key == Key.Q)
+                {
+                    KeysDown[4] = false;
+                }
+                else if (e.Key == Key.E)
+                {
+                    KeysDown[5] = false;
+                }
             }
             void MouseWheel(object sender, MouseWheelEventArgs e)
             {
@@ -194,6 +220,16 @@ namespace InstantGameworks
             Window.KeyDown += KeyDown;
             Window.KeyUp += KeyUp;
             Window.MouseWheel += MouseWheel;
+
+            /*while (true)
+            {
+                Thread.Sleep(10);
+              */  Window.AddObject(@"Testing\MONKEY.igwo").Position = new Vector3(
+                    pos.Next(-250, 250)/10f,
+                    pos.Next(-250, 250)/10f,
+                    pos.Next(-205, 250)/10f
+                    );
+            //}
 
 
             //Exit

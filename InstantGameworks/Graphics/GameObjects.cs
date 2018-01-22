@@ -141,7 +141,7 @@ namespace InstantGameworks.Graphics
             GL.BindVertexArray(_objectArray);
 
             //Set default internal values
-            Position = new Vector3(0, 0, 4.0f);
+            Position = new Vector3(0, 0, 0);
             Scale = new Vector3(1, 1, 1);
             Rotation = new Vector3(0, 0, 0);
             Velocity = new Vector3(0, 0, 0);

@@ -71,6 +71,9 @@
     <None Include="Testing\airplane.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Testing\box.igwo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Testing\MONKEY.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

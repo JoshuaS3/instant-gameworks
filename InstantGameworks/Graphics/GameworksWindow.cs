@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 using OpenTK;
 using OpenTK.Graphics;
@@ -56,7 +57,6 @@ namespace InstantGameworks.Graphics
 
             //Adjust render settings
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-            GL.LineWidth(0f);
             GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Multisample);
@@ -87,7 +87,6 @@ namespace InstantGameworks.Graphics
         {
             //if (Focused)
             //{
-                base.OnRenderFrame(e);
                 _time += e.Time;
                 Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f / e.Time) + "fps";
 
@@ -110,17 +109,23 @@ namespace InstantGameworks.Graphics
                 _cameraMatrix = Camera.PerspectiveMatrix;
                 GL.UniformMatrix4(3, false, ref _cameraMatrix);
 
-
-                foreach (var renderObject in RenderObjects)
+                var currentObjects = RenderObjects.ToList();
+                foreach (var renderObject in currentObjects)
                 {
-                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
                     renderObject.Render();
                 }
 
 
                 //Update frame
                 SwapBuffers();
+                base.OnRenderFrame(e);
             //}
+        }
+
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            base.OnUpdateFrame(e);
         }
 
 
@@ -131,9 +136,9 @@ namespace InstantGameworks.Graphics
             void Add(object sender, FrameEventArgs e)
             {
                 newObject = new Object3D(newObjectData);
-                UpdateFrame -= Add;
+                RenderFrame -= Add;
             }
-            UpdateFrame += Add;
+            RenderFrame += Add;
             while (newObject == null) { }
             RenderObjects.Add(newObject);
             return newObject;

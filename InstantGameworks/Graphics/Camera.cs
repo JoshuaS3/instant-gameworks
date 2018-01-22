@@ -65,7 +65,7 @@ namespace InstantGameworks.Graphics
 
     public class StudioCamera : Camera
     {
-        public float MoveSensitivity = 0.005f;
+        public float MoveSensitivity = 50f;
         public float LookSensitivity = 0.0025f;
 
         public void AddRotation(float DeltaX, float DeltaY)
@@ -92,7 +92,7 @@ namespace InstantGameworks.Graphics
             forward.NormalizeFast();
             Vector3 right = new Vector3(-forward.Z, 0, forward.X);
             right.NormalizeFast();
-            Vector3 up = new Vector3(0, (float)Math.Sin(Orientation.X), (float)Math.Cos(Orientation.Y));
+            Vector3 up = new Vector3(-(float)Math.Sin(Orientation.X), (float)Math.Tan(Orientation.Y), -(float)Math.Cos(Orientation.X));// (float)Math.Cos(Orientation.Y));
             up.NormalizeFast();
 
             offset += x * right;
