@@ -41,6 +41,7 @@ namespace InstantGameworks
             Window.Y = (int)WindowPosition.Y;
             DebugWriteLine("Window success");
 
+            Window.VSync = VSyncMode.On;
             Window.Run(RefreshRate, RefreshRate);
             
         }
@@ -57,11 +58,11 @@ namespace InstantGameworks
             //Set window settings
             DisplayDevice defaultDisplay = DisplayDevice.Default;
             WindowDisplay = defaultDisplay;
-            RefreshRate = 0;
-            WindowSize = new Vector2(1920, 1080);
-            WindowPosition = new Vector2(0, 0);
+            RefreshRate = 144;
+            WindowSize = new Vector2(1280, 720);
+            WindowPosition = new Vector2(100, 50);
             WindowBorder = WindowBorder.Fixed;
-            WindowState = WindowState.Fullscreen;
+            WindowState = WindowState.Normal;
 
             //Create window
             ThreadStart GameThread = new ThreadStart(OpenWindow);
@@ -73,7 +74,7 @@ namespace InstantGameworks
             
             //Add game objects
             StudioCamera Camera = new StudioCamera();
-            Camera.MoveSensitivity = 0.003f;
+            Camera.MoveSensitivity = 0.08f;
             Window.Camera = Camera;
 
 
@@ -95,7 +96,7 @@ namespace InstantGameworks
             void OnUpdateFrame(object sender, FrameEventArgs e)
             {
                 _time += e.Time;
-                k = (float)_time * 3;
+                k = (float)_time * 0.3f;
                 Airplane.Rotation = new Vector3((float)Math.Cos(_time * 0.75f) * 0.1f,
                                                 (float)Math.Sin(_time * 0.5f) * 0.1f + 0.4f,
                                                 (float)Math.Sin(_time * 0.5f) * 0.125f);

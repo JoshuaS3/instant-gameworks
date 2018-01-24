@@ -43,7 +43,6 @@ namespace InstantGameworks.Graphics
             Title += " (OpenGL " + GL.GetString(StringName.Version) + ")";
             CursorVisible = true;
             Icon = new Icon(@"Extra\InstantGameworks.ico");
-            VSync = VSyncMode.Off;
             
         }
 
@@ -112,7 +111,7 @@ namespace InstantGameworks.Graphics
                 var currentObjects = RenderObjects.ToList();
                 foreach (var renderObject in currentObjects)
                 {
-                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
                     renderObject.Render();
                 }
 

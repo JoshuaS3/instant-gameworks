@@ -124,8 +124,11 @@ namespace InstantGameworks.Graphics
             _vertexPositionBuffer = GL.GenBuffer();
 
             GL.BindVertexArray(_objectArray);
+            
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexPositionBuffer);
-            GL.NamedBufferStorage(_vertexPositionBuffer, Vertex.Size * _vertexCount, drawData, BufferStorageFlags.MapWriteBit);
+            GL.NamedBufferStorage(_vertexPositionBuffer, Vertex.Size * _vertexCount, drawData, BufferStorageFlags.MapReadBit);
+
+
 
             //Bind attributes
             GL.VertexArrayAttribBinding(_objectArray, 0, 0);
