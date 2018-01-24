@@ -43,14 +43,12 @@ namespace InstantGameworks
 
             Window.VSync = VSyncMode.On;
             Window.Run(RefreshRate, RefreshRate);
-            
         }
         
         public static void Main()
         {
             Console.Title = "Instant Gameworks";
             Console.WriteLine("Instant Gameworks (c)2018");
-
 
             //Main
             DebugWriteLine("Init");
@@ -91,6 +89,12 @@ namespace InstantGameworks
 
             bool[] KeysDown = new bool[] { false, false, false, false, false, false };
 
+
+            Vector2 mouseLastPos = new Vector2(0, 0);
+            bool isRightMouseDown = false;
+            bool settingMousePosition = false;
+            Random pos = new Random();
+
             double _time = 0;
             float k;
             void OnUpdateFrame(object sender, FrameEventArgs e)
@@ -101,6 +105,12 @@ namespace InstantGameworks
                                                 (float)Math.Sin(_time * 0.5f) * 0.1f + 0.4f,
                                                 (float)Math.Sin(_time * 0.5f) * 0.125f);
                 Airplane.Position = new Vector3((float)(Math.Sin(k) * 0.01f), (float)(Math.Cos(k * 5f) * 0.025f), -4.0f);
+
+                if (isRightMouseDown)
+                {
+                    settingMousePosition = true;
+                    Mouse.SetPosition(mouseLastPos.X + Window.X, mouseLastPos.Y + Window.Y);
+                }
                 
                 if (KeysDown[0] == true)
                 {
@@ -128,12 +138,7 @@ namespace InstantGameworks
                 }
             }
 
-
-
-
-            Vector2 mouseLastPos = new Vector2(0, 0);
-            bool isRightMouseDown = false;
-            Random pos = new Random();
+            
             void MouseDown(object sender, MouseButtonEventArgs e)
             {
                 if (e.Button == MouseButton.Right)
@@ -154,10 +159,11 @@ namespace InstantGameworks
             }
             void MouseMove(object sender, MouseMoveEventArgs e)
             {
-                if (Window.Focused && isRightMouseDown)
+                if (Window.Focused && isRightMouseDown && !settingMousePosition)
                 {
                     Camera.AddRotation(e.XDelta, e.YDelta);
                 }
+                settingMousePosition = false;
             }
             void KeyDown(object sender, KeyboardKeyEventArgs e)
             {
@@ -221,16 +227,6 @@ namespace InstantGameworks
             Window.KeyDown += KeyDown;
             Window.KeyUp += KeyUp;
             Window.MouseWheel += MouseWheel;
-
-            /*while (true)
-            {
-                Thread.Sleep(10);
-              */  Window.AddObject(@"Testing\MONKEY.igwo").Position = new Vector3(
-                    pos.Next(-250, 250)/10f,
-                    pos.Next(-250, 250)/10f,
-                    pos.Next(-205, 250)/10f
-                    );
-            //}
 
 
             //Exit

@@ -84,42 +84,39 @@ namespace InstantGameworks.Graphics
         private double _time;
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            //if (Focused)
-            //{
-                _time += e.Time;
-                Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f / e.Time) + "fps";
+            _time += e.Time;
+            Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f / e.Time) + "fps";
 
 
-                //Adjust viewport
-                GL.Viewport(0, 0, Width, Height);
+            //Adjust viewport
+            GL.Viewport(0, 0, Width, Height);
 
-                //Clear frame
-                GL.ClearColor(Color.CornflowerBlue);
-                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            //Clear frame
+            GL.ClearColor(Color.CornflowerBlue);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-                //Render frame
+            //Render frame
 
-                GL.UseProgram(_program);
+            GL.UseProgram(_program);
 
 
 
-                Camera.AspectRatio = (float)Width / Height;
-                Camera.Update();
-                _cameraMatrix = Camera.PerspectiveMatrix;
-                GL.UniformMatrix4(3, false, ref _cameraMatrix);
+            Camera.AspectRatio = (float)Width / Height;
+            Camera.Update();
+            _cameraMatrix = Camera.PerspectiveMatrix;
+            GL.UniformMatrix4(3, false, ref _cameraMatrix);
 
-                var currentObjects = RenderObjects.ToList();
-                foreach (var renderObject in currentObjects)
-                {
-                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-                    renderObject.Render();
-                }
+            var currentObjects = RenderObjects.ToList();
+            foreach (var renderObject in currentObjects)
+            {
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                renderObject.Render();
+            }
 
 
-                //Update frame
-                SwapBuffers();
-                base.OnRenderFrame(e);
-            //}
+            //Update frame
+            SwapBuffers();
+            base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)

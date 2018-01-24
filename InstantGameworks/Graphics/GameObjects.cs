@@ -54,9 +54,32 @@ namespace InstantGameworks.Graphics
         public override string ClassName { get; } = "LightSource";
         public override string Name { get; set; } = "LightSource";
 
-        public Color4 Color { get; set; }
-        public float Intensity { get; set; }
+        public virtual Color4 Color { get; set; }
+        public virtual float Intensity { get; set; }
+        public virtual bool Enabled { get; set; }
+    }
+
+    public class PointLight : LightSource
+    {
+        private List<string> _inherits = new List<string>() { "Instance", "LightSource" };
+
+        public override string ClassName { get; } = "PointLight";
+        public override string Name { get; set; } = "PointLight";
+
+        public override Color4 Color { get; set; }
+        public override float Intensity { get; set; }
+        public override bool Enabled { get; set; }
+
         public float Radius { get; set; }
+
+        public PointLight(Color4 color, float intensity, float radius)
+        {
+            Color = color;
+            Intensity = intensity;
+            Radius = radius;
+            Enabled = true;
+        }
+
     }
 
 
