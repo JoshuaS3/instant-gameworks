@@ -70,8 +70,8 @@ namespace InstantGameworks.Graphics
 
         public void AddRotation(float DeltaX, float DeltaY)
         {
-            DeltaX *= LookSensitivity;
-            DeltaY *= LookSensitivity;
+            DeltaX *= -LookSensitivity;
+            DeltaY *= -LookSensitivity;
 
             Orientation = new Vector2(
                 (Orientation.X + DeltaX) % ((float)Math.PI * 2f), //361 degrees turns into 1 degree

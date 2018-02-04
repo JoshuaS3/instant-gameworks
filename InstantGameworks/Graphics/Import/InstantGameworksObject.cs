@@ -5,236 +5,189 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.IO;
-using OpenTK;
-using OpenTK.Graphics;
 
 namespace InstantGameworks.Graphics.Import
 {
-    public struct Vertex
+    public struct InstantGameworksObject
     {
-        public const int Size = (4 + 3 + 4 + 3) * 4;
+        public Position[] Positions;
+        public TextureCoordinates[] TextureCoordinates;
+        public Position[] Normals;
 
-        public Vector4 Position;
-        public Vector3 Normal;
-        public Color4 Color;
-        public Vector3 TextureCoordinates;
-        public Vertex(Vector4 position, Vector3 normal = new Vector3(), Color4 color = new Color4(), Vector3 texCoords = new Vector3())
+        public Face[] Faces;
+    }
+
+    public struct Position
+    {
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
+        public Position(float x, float y, float z)
         {
-            Position = position;
-            Normal = normal;
-            Color = color;
-            TextureCoordinates = texCoords;
+            X = x;
+            Y = y;
+            Z = z;
         }
     }
 
-    class InstantGameworksObject
+    public struct TextureCoordinates
     {
 
-        public static Tuple<Vertex[], Vector4[], Color4[], Vector3[], Vector3[]> Import(string fileName)
+        public float U { get; set; }
+        public float V { get; set; }
+        public float W { get; set; }
+        TextureCoordinates(float u, float v)
         {
-            List<Vector3> positionList = new List<Vector3>();
-            List<Vector3> normalList = new List<Vector3>();
-            List<Color4> colorList = new List<Color4>();
-            List<Vector3> textureList = new List<Vector3>();
+            U = u;
+            V = v;
+            W = 0;
+        }
+        TextureCoordinates(float u, float v, float w)
+        {
+            U = u;
+            V = v;
+            W = w;
+        }
+    }
 
-            //Internal
-            int scaleFactor;
+    public struct Vertex
+    {
+        public int PositionIndex; //Where in the Positions list can I find this data? (gets rid of repitition)
+        public int TextureCoordinatesIndex;
+        public int NormalIndex;
+    }
 
-            string fileText;
+    public struct Face
+    {
+        public Vertex[] Vertices;
+    }
 
-            using (BinaryReader reader = new BinaryReader(File.Open(fileName, FileMode.Open)))
+    public class DataHandler
+    {
+        public static void WriteFile(string fileLocation, InstantGameworksObject objectData)
+        {
+            Stream _fileStream = new FileStream(fileLocation, FileMode.Create, FileAccess.Write, FileShare.None);
+            BinaryWriter _binaryWriter = new BinaryWriter(_fileStream);
+
+
+            _binaryWriter.Write('P'); //indicate beginning of positions array
+            _binaryWriter.Write(objectData.Positions.Length);
+            foreach (Position position in objectData.Positions)
             {
-                fileText = reader.ReadString();
+                _binaryWriter.Write(position.X);
+                _binaryWriter.Write(position.Y);
+                _binaryWriter.Write(position.Z);
             }
 
-            //Parse
+            _binaryWriter.Write('T'); //indicate beginning of texture coordinates array
+            _binaryWriter.Write(objectData.TextureCoordinates.Length);
+            foreach (TextureCoordinates textCoord in objectData.TextureCoordinates)
             {
-
-                //Scale factor
-                {
-                    string[] scaleSplit = fileText.Split(new[] { ':' });
-                    scaleFactor = int.Parse(scaleSplit[1].Split(new[] { '\n' })[0].TrimStart(' '));
-                }
-                
-                //Vertex data
-                {
-                    string vertexList = fileText.Split(new[] { 'v' })[1].Split(new[] { '\n' })[1].Split(new[] { '\n' })[0];
-                    string[] verticesText = vertexList.Split(new[] { ';' });
-                    foreach (string vertex in verticesText)
-                    {
-                        bool a = false;
-                        string[] posData = vertex.Split(new[] { ' ' });
-                        List<float> posData2 = new List<float>();
-                        foreach (string coord in posData)
-                        {
-                            if (!string.IsNullOrWhiteSpace(coord))
-                            {
-                                float pos = float.Parse(coord);
-                                posData2.Add(pos / scaleFactor);
-                                a = true;
-                            }
-                        }
-                        if (a)
-                        {
-                            positionList.Add(new Vector3(posData2[0], posData2[1], posData2[2])); // x y z
-                        }
-
-                    }
-                }
-
-
-                //Normal data
-                {
-                    string[] normList = fileText.Split(new[] { 'v' })[1] //after v
-                                                 .Split(new[] { 'n' }); //normal
-                    if (normList.Length == 2) //check if normals are there
-                    {
-                        string thisList = normList[1].Split(new[] { '\n' })[1].Split(new[] { '\n' })[0];
-                        string[] eachNormal = thisList.Split(new[] { ';' });
-
-                        foreach (string normal in eachNormal)
-                        {
-                            bool a = false;
-                            string[] normData = normal.Split(new[] { ' ' });
-                            List<float> normData2 = new List<float>();
-                            foreach (string coord in normData)
-                            {
-                                if (!string.IsNullOrWhiteSpace(coord))
-                                {
-                                    normData2.Add(float.Parse(coord));
-                                    a = true;
-                                }
-                            }
-                            if (a)
-                            {
-                                normalList.Add(new Vector3(normData2[0], normData2[1], normData2[2])); // x y z
-                            }
-
-                        }
-                    }
-                }
-
-                //Color data
-                {
-                    string[] colList = fileText.Split(new[] { 'v' })[1] //after v
-                                                 .Split(new[] { 'c' });
-                    if (colList.Length == 2)
-                    {
-                        string thisList = colList[1].Split(new[] { '\n' })[1].Split(new[] { '\n' })[0];
-                        string[] eachColor = thisList.Split(new[] { ';' });
-
-                        foreach (string color in eachColor)
-                        {
-                            bool a = false;
-                            string[] colDat = color.Split(new[] { ' ' });
-                            List<float> colDat2 = new List<float>();
-                            foreach (string coord in colDat)
-                            {
-                                if (!string.IsNullOrWhiteSpace(coord))
-                                {
-                                    colDat2.Add(float.Parse(coord));
-                                    a = true;
-                                }
-                            }
-                            if (a)
-                            {
-                                colorList.Add(new Color4(colDat2[0], colDat2[1], colDat2[2], 1.0f)); // r g b a
-                            }
-
-                        }
-                    }
-                }
-                
-                //Texture data
-                {
-                    string[] textList = fileText.Split(new[] { 'v' })[1] //after v
-                                                 .Split(new[] { 't' });
-                    if (textList.Length == 2)
-                    {
-                        string thisList = textList[1].Split(new[] { '\n' })[1].Split(new[] { '\n' })[0];
-                        string[] eachText = thisList.Split(new[] { ';' });
-
-                        foreach (string tex in eachText)
-                        {
-                            bool a = false;
-                            string[] texDat = tex.Split(new[] { ' ' });
-                            List<float> texDat2 = new List<float>();
-                            foreach (string coord in texDat)
-                            {
-                                if (!string.IsNullOrWhiteSpace(coord))
-                                {
-                                    texDat2.Add(float.Parse(coord));
-                                    a = true;
-                                }
-                            }
-                            if (a)
-                            {
-                                textureList.Add(new Vector3(texDat2[0], texDat2[1], texDat2[2])); // r g b a
-                            }
-
-                        }
-                    }
-                }
-
+                _binaryWriter.Write(textCoord.U);
+                _binaryWriter.Write(textCoord.V);
+                _binaryWriter.Write(textCoord.W);
             }
 
-            string facesText = fileText.Split(new[] { 'v' })[1].Split(new[] { 'f' })[1].Split(new[] { '\n' })[1].Split(new[] { '\n' })[0];
-            string[] faces = facesText.Split(new[] { ';' });
-
-            Vector4[] VertexPositions = new Vector4[positionList.Count];
-            Vector3[] VertexNormals = normalList.Count > 0 ? new Vector3[normalList.Count] : new Vector3[0];
-            Color4[] VertexColors = colorList.Count > 0 ? new Color4[colorList.Count] : new Color4[0];
-            Vector3[] VertexTextureCoords = textureList.Count > 0 ? new Vector3[textureList.Count] : new Vector3[0];
-
-
-            Vertex[] DrawData = new Vertex[(faces.Length * 3)];
-
-
-            int faceCount = 0;
-            foreach (string face in faces)
+            _binaryWriter.Write('N'); //indicate beginning of normals array
+            _binaryWriter.Write(objectData.Normals.Length);
+            foreach (Position normal in objectData.Normals)
             {
-                string[] eachVert = face.Split(new[] { ' ' });
-                foreach (string vert in eachVert)
+                _binaryWriter.Write(normal.X);
+                _binaryWriter.Write(normal.Y);
+                _binaryWriter.Write(normal.Z);
+            }
+
+            _binaryWriter.Write('F'); //indicate beginning of normals array
+            _binaryWriter.Write(objectData.Faces.Length);
+            foreach (Face face in objectData.Faces)
+            {
+                foreach (Vertex vertex in face.Vertices)
                 {
-                    string[] refData = vert.Split(new[] { '/' });
-                    if (refData.Length == 3 && !string.IsNullOrEmpty(refData[2]))
-                    {
-                        int vertexIndex = int.Parse(refData[0]);
-                        int textIndex = !string.IsNullOrEmpty(refData[1]) ? int.Parse(refData[1]) : -1;
-                        int normIndex = !string.IsNullOrEmpty(refData[2]) ? int.Parse(refData[2]) : -1;
-
-                        Vertex thisVertex = new Vertex();
-
-                        VertexPositions[vertexIndex] = new Vector4(positionList[vertexIndex], 1.0f);
-                        thisVertex.Position = VertexPositions[vertexIndex];
-                        thisVertex.Color = new Color4(VertexPositions[vertexIndex].X * 0.2f + 0.75f, VertexPositions[vertexIndex].Y * 0.1f + 0.8f, VertexPositions[vertexIndex].Z * 0.35f+0.5f, 1);
-                        if (VertexColors.Length != 0)
-                        {
-                            VertexColors[vertexIndex] = colorList[vertexIndex];
-                            thisVertex.Color = colorList[vertexIndex];
-                        }
-
-                        if (VertexTextureCoords.Length != 0 && textIndex != -1)
-                        {
-                            VertexTextureCoords[textIndex] = textureList[textIndex];
-                            thisVertex.TextureCoordinates = textureList[textIndex];
-                        }
-
-                        if (VertexNormals.Length != 0 && normIndex != -1)
-                        {
-                            VertexNormals[normIndex] = normalList[normIndex];
-                            thisVertex.Normal = normalList[normIndex];
-                        }
-                        DrawData[faceCount] = thisVertex;
-                        
-                        faceCount++;
-                    }
+                    _binaryWriter.Write(vertex.PositionIndex);
+                    _binaryWriter.Write(vertex.TextureCoordinatesIndex);
+                    _binaryWriter.Write(vertex.NormalIndex);
                 }
             }
-            
 
 
-            return Tuple.Create(DrawData, VertexPositions, VertexColors, VertexNormals, VertexTextureCoords);
+            _binaryWriter.Close();
+            _fileStream.Close();
+        }
+
+        public static InstantGameworksObject ReadFile(string fileLocation)
+        {
+            InstantGameworksObject objectData = new InstantGameworksObject();
+
+            Stream _fileStream = new FileStream(fileLocation, FileMode.Open, FileAccess.Read, FileShare.Read);
+            BinaryReader _binaryReader = new BinaryReader(_fileStream);
+
+            List<Position> positionData = new List<Position>();
+            List<TextureCoordinates> textureData = new List<TextureCoordinates>();
+            List<Position> normalData = new List<Position>();
+            List<Face> faceData = new List<Face>();
+
+            int arrayLength;
+
+            _binaryReader.ReadChar(); //'P' for position
+            arrayLength = _binaryReader.ReadInt32();
+            for (int i = 0; i < arrayLength; i++)
+            {
+                Position newPos = new Position();
+                newPos.X = _binaryReader.ReadSingle();
+                newPos.Y = _binaryReader.ReadSingle();
+                newPos.Z = _binaryReader.ReadSingle();
+                positionData.Add(newPos);
+            }
+
+            _binaryReader.ReadChar(); //'T' for texture coordinates
+            arrayLength = _binaryReader.ReadInt32();
+            for (int i = 0; i < arrayLength; i++)
+            {
+                TextureCoordinates newUVW = new TextureCoordinates();
+                newUVW.U = _binaryReader.ReadSingle();
+                newUVW.V = _binaryReader.ReadSingle();
+                newUVW.W = _binaryReader.ReadSingle();
+                textureData.Add(newUVW);
+            }
+
+            _binaryReader.ReadChar(); //'N' for normals
+            arrayLength = _binaryReader.ReadInt32();
+            for (int i = 0; i < arrayLength; i++)
+            {
+                Position newPos = new Position();
+                newPos.X = _binaryReader.ReadSingle();
+                newPos.Y = _binaryReader.ReadSingle();
+                newPos.Z = _binaryReader.ReadSingle();
+                normalData.Add(newPos);
+            }
+
+            _binaryReader.ReadChar(); //'F' for face
+            arrayLength = _binaryReader.ReadInt32();
+            for (int i = 0; i < arrayLength; i++)
+            {
+                Face newFace = new Face();
+                newFace.Vertices = new Vertex[3];
+                for (int x = 0; x < 3; x++) //for each vertex
+                {
+                    Vertex newVertex = new Vertex();
+                    newVertex.PositionIndex = _binaryReader.ReadInt32();
+                    newVertex.TextureCoordinatesIndex = _binaryReader.ReadInt32();
+                    newVertex.NormalIndex = _binaryReader.ReadInt32();
+                    newFace.Vertices[x] = newVertex;
+                }
+                faceData.Add(newFace);
+            }
+
+            objectData.Positions = positionData.ToArray();
+            objectData.TextureCoordinates = textureData.ToArray();
+            objectData.Normals = normalData.ToArray();
+            objectData.Faces = faceData.ToArray();
+
+
+            _binaryReader.Close();
+            _fileStream.Close();
+
+            return objectData;
         }
     }
 }

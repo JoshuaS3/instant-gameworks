@@ -23,12 +23,13 @@ namespace InstantGameworks.Graphics
         private List<int> _shadersList = new List<int>();
         private Matrix4 _cameraMatrix;
 
+        public List<EnableCap> EnableCaps = new List<EnableCap>();
 
-        public Camera Camera = new Camera();
-        public List<Object3D> RenderObjects = new List<Object3D>();
+        public Camera Camera = new Camera(); //Current Camera object in use by the program
+        public List<Object3D> RenderObjects = new List<Object3D>(); //List of objects in memory
 
 
-        //Init
+        //Initialization defaults
         public GameworksWindow()
             :base(1280, //Width
                   720, //Height
@@ -43,7 +44,8 @@ namespace InstantGameworks.Graphics
             Title += " (OpenGL " + GL.GetString(StringName.Version) + ")";
             CursorVisible = true;
             Icon = new Icon(@"Extra\InstantGameworks.ico");
-            
+            EnableCaps.Add(EnableCap.DepthTest);
+            EnableCaps.Add(EnableCap.Multisample);
         }
 
         //On initial load
@@ -57,9 +59,6 @@ namespace InstantGameworks.Graphics
             //Adjust render settings
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
-            GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.Multisample);
-
 
             //Create and compile shaders
             int vertexShader = Shaders.CreateShader(@"Graphics\GLSL\vertexshader.glsl", ShaderType.VertexShader);
@@ -95,6 +94,18 @@ namespace InstantGameworks.Graphics
             GL.ClearColor(Color.CornflowerBlue);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+
+            //Reset caps
+            /*foreach (EnableCap cap in Enum.GetValues(typeof(EnableCap)))
+            {
+                GL.Disable(cap);
+            }*/
+            foreach (EnableCap cap in EnableCaps)
+            {
+                GL.Enable(cap);
+            }
+
+
             //Render frame
 
             GL.UseProgram(_program);
@@ -109,7 +120,7 @@ namespace InstantGameworks.Graphics
             var currentObjects = RenderObjects.ToList();
             foreach (var renderObject in currentObjects)
             {
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
                 renderObject.Render();
             }
 
@@ -123,43 +134,7 @@ namespace InstantGameworks.Graphics
         {
             base.OnUpdateFrame(e);
         }
-
-
-        public Object3D AddObject(string fileName)
-        {
-            var newObjectData = InstantGameworksObject.Import(fileName);
-            Object3D newObject = null;
-            void Add(object sender, FrameEventArgs e)
-            {
-                newObject = new Object3D(newObjectData);
-                RenderFrame -= Add;
-            }
-            RenderFrame += Add;
-            while (newObject == null) { }
-            RenderObjects.Add(newObject);
-            return newObject;
-        }
-        public Object3D AddObject(Vertex[] drawData,
-                                  Vector4[] vertexPositions,
-                                  Color4[] vertexColors,
-                                  Vector3[] vertexNormals, // 
-                                  Vector3[] vertexTextureCoordinates)
-        {
-            var newObjectData = new Tuple<Vertex[], Vector4[], Color4[], Vector3[], Vector3[]>(drawData, vertexPositions, vertexColors, vertexNormals, vertexTextureCoordinates);
-
-            Object3D newObject = null;
-            void Add(object sender, FrameEventArgs e)
-            {
-                newObject = new Object3D(newObjectData);
-                UpdateFrame -= Add;
-            }
-            UpdateFrame += Add;
-            while (newObject == null) { }
-            RenderObjects.Add(newObject);
-            return newObject;
-        }
-
-
+        
 
         //Run code before exit
         private void OnExit(object sender, EventArgs eventArgs)
@@ -179,6 +154,31 @@ namespace InstantGameworks.Graphics
             }
             GL.DeleteProgram(_program);
             base.Exit();
+        }
+
+
+
+
+
+
+
+
+
+
+
+        public Object3D AddObject(string fileName)
+        {
+            var newObjectData = DataHandler.ReadFile(fileName);
+            Object3D newObject = null;
+            void Add(object sender, FrameEventArgs e)
+            {
+                newObject = new Object3D(newObjectData);
+                RenderObjects.Add(newObject);
+                RenderFrame -= Add;
+            }
+            RenderFrame += Add;
+            while (newObject == null) { }
+            return newObject;
         }
     }
 }
