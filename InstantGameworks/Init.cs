@@ -5,6 +5,7 @@ using System.Threading;
 
 using OpenTK;
 using OpenTK.Input;
+using InstantGameworks.Services;
 using InstantGameworks.Graphics;
 using InstantGameworks.Graphics.Import;
 
@@ -69,6 +70,9 @@ namespace InstantGameworks
 
             //Wait for window to initialize
             while (Window == null) { }
+            while (!Window.Exists) { }
+
+            ConsoleApp.HideConsole();
 
 
 
@@ -240,6 +244,7 @@ namespace InstantGameworks
 
             //Exit
             while (Window.Exists) { } //wait until the window is exited
+            ConsoleApp.ShowConsole();
             DebugWriteLine("Shutting down");
 
             //end of thread

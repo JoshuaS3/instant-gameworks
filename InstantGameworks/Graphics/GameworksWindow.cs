@@ -96,10 +96,10 @@ namespace InstantGameworks.Graphics
 
 
             //Reset caps
-            /*foreach (EnableCap cap in Enum.GetValues(typeof(EnableCap)))
+            foreach (EnableCap cap in Enum.GetValues(typeof(EnableCap)))
             {
                 GL.Disable(cap);
-            }*/
+            }
             foreach (EnableCap cap in EnableCaps)
             {
                 GL.Enable(cap);
