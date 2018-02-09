@@ -5,9 +5,11 @@ using System.Threading;
 
 using OpenTK;
 using OpenTK.Input;
+using OpenTK.Graphics;
 using InstantGameworks.Services;
 using InstantGameworks.Graphics;
 using InstantGameworks.Graphics.Import;
+
 
 namespace InstantGameworks
 {
@@ -54,9 +56,9 @@ namespace InstantGameworks
             DisplayDevice DefaultDisplay = DisplayDevice.Default;
             GameWindowRefreshRate = DefaultDisplay.RefreshRate;
             GameWindowSize = new Vector2(1280, 720); 
-            GameWindowPosition = new Vector2(100, 50);
+            GameWindowPosition = new Vector2(0, 00);
             GameWindowBorder = WindowBorder.Fixed;
-            GameWindowState = WindowState.Normal;
+            GameWindowState = WindowState.Fullscreen;
 
             // Create window
             DebugWriteLine("Initializing GameworksWindow");
@@ -95,6 +97,7 @@ namespace InstantGameworks
             var Land = GameWindow.AddObject(@"Testing\land.igwo");
             Land.Scale = new Vector3(10, 30, 10);
             Land.Position = new Vector3(0, -20, 0);
+            Land.Color = Color4.DarkGreen;
 
 
 
@@ -111,8 +114,8 @@ namespace InstantGameworks
                 Airplane.Position = new Vector3((float)(Math.Sin(_time) * 0.01f), (float)(Math.Cos(_time * 5f) * 0.025f), -4.0f);
                 
                 float hue = ((float)_time * 0.1f) % 1f;
-                var color = OpenTK.Graphics.Color4.FromHsv(new Vector4(hue, 0.5f, 0.5f, 0.5f));
-                //Airplane.Color = color;
+                var color = Color4.FromHsv(new Vector4(hue, 0.5f, 0.5f, 0.5f));
+                Airplane.Color = color;
             }
 
             // Camera implementation

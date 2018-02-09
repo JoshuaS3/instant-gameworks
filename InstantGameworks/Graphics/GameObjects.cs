@@ -143,6 +143,11 @@ namespace InstantGameworks.Graphics
         public TextureCoordinates[] VertexTextureCoordinates { get => _vertexTextureCoordinates; set => _vertexTextureCoordinates = value; } // u v [w]
         public Face[] Faces { get => _faces; set => _faces = value; }
 
+
+        public delegate void RenderEvent();
+        public event RenderEvent OnRender = delegate { };
+
+
         private bool _initialized;
         private int _objectArray;
 
@@ -207,10 +212,15 @@ namespace InstantGameworks.Graphics
         
         private void _updateColor(Color4 color)
         {
-            _color = color;
-            _sortData();
-            GL.BindVertexArray(_objectArray);
-            GL.NamedBufferSubData(_vertexPositionBuffer, IntPtr.Zero, _sortedVertices.Length * DrawVertex.SizeInBytes, _sortedVertices);
+            void updateWhenRendered()
+            {
+                _color = color;
+                _sortData();
+                GL.BindVertexArray(_objectArray);
+                GL.NamedBufferSubData(_vertexPositionBuffer, IntPtr.Zero, _sortedVertices.Length * DrawVertex.SizeInBytes, _sortedVertices);
+                OnRender -= updateWhenRendered;
+            }
+            OnRender += updateWhenRendered;
         }
 
         private void _sortData()
@@ -262,6 +272,7 @@ namespace InstantGameworks.Graphics
 
         public void Render()
         {
+            OnRender();
             _modelView = Matrix4.CreateRotationX(Rotation.X) *
                          Matrix4.CreateRotationY(Rotation.Y) *
                          Matrix4.CreateRotationZ(Rotation.Z) *
