@@ -74,9 +74,9 @@ namespace InstantGameworks.Graphics
             DeltaY *= -LookSensitivity;
 
             Orientation = new Vector2(
-                (Orientation.X + DeltaX) % ((float)Math.PI * 2f), //361 degrees turns into 1 degree
-                Math.Max( // Make sure it's not too low (-180 degrees)
-                    Math.Min( // Or high (180 degrees)
+                (Orientation.X + DeltaX) % ((float)Math.PI * 2f),
+                Math.Max(
+                    Math.Min(
                         Orientation.Y + DeltaY,
                         (float)Math.PI / 2f - 0.1f
                     ),
@@ -92,7 +92,7 @@ namespace InstantGameworks.Graphics
             forward.NormalizeFast();
             Vector3 right = new Vector3(-forward.Z, 0, forward.X);
             right.NormalizeFast();
-            Vector3 up = new Vector3((float)Math.Sin(Orientation.Y), (float)Math.Tan(Orientation.Y), (float)Math.Cos(Orientation.Y));//new Vector3(-(float)Math.Cos(Orientation.X), (float)Math.Tan(Orientation.Y), -(float)Math.Cos(Orientation.Y));// (float)Math.Cos(Orientation.Y));
+            Vector3 up = new Vector3((float)Math.Sin(Orientation.Y), (float)Math.Tan(Orientation.Y), (float)Math.Cos(Orientation.Y));
             up.NormalizeFast();
 
             offset += x * right;

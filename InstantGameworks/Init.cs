@@ -13,148 +13,135 @@ namespace InstantGameworks
 {
     class Init
     {
-
-        private static void DebugWriteLine(string output) => Console.WriteLine(Services.SysTime.GetTime() + " " + output); //DebugWriteLine just adds a timestamp to the printout
+        private static void DebugWriteLine(string output) => Console.WriteLine(SysTime.GetTime() + " " + output);
         
-        private static GameworksWindow Window; //Our window's direct object
-        private static IntPtr WindowHandle; //Win32's ID for the window
+        private static GameworksWindow GameWindow;
+        private static IntPtr GameWindowHandle;
 
-        private static Vector2 WindowSize; //x, y
-        private static Vector2 WindowPosition; //x, y
-        private static WindowBorder WindowBorder; //custom border settings (should it be resizeable? hidden? etc)
-        private static WindowState WindowState; //fullscreen, maximized, minimized, default
-        private static float RefreshRate; //FPS
-        private static DisplayDevice WindowDisplay; //which display (graphics card) to use
+        private static Vector2 GameWindowSize;
+        private static Vector2 GameWindowPosition;
+        private static WindowBorder GameWindowBorder;
+        private static WindowState GameWindowState;
+        private static float GameWindowRefreshRate;
 
         [STAThread]
-        private static void OpenWindow() //This is separate from the main thread because Window.Run() at the bottom yields the thread (nothing runs until it's closed)
+        private static void CreateGameworksWindow()
         {
-            DebugWriteLine("Window init");
 
-            Window = new GameworksWindow(); //create new window
-            WindowHandle = Window.WindowInfo.Handle; //assign handle for later. not in use rn but it'll come in handy
+            GameWindow = new GameworksWindow();
+            GameWindowHandle = GameWindow.WindowInfo.Handle;
 
-            Window.Width = (int)WindowSize.X; //width and height are separate values
-            Window.Height = (int)WindowSize.Y;
-            Window.WindowBorder = WindowBorder;
-            Window.WindowState = WindowState;
-            Window.X = (int)WindowPosition.X; //position is also 2 separate values
-            Window.Y = (int)WindowPosition.Y;
-            DebugWriteLine("Window success");
+            GameWindow.Width = (int)GameWindowSize.X;
+            GameWindow.Height = (int)GameWindowSize.Y;
+            GameWindow.WindowBorder = GameWindowBorder;
+            GameWindow.WindowState = GameWindowState;
+            GameWindow.X = (int)GameWindowPosition.X;
+            GameWindow.Y = (int)GameWindowPosition.Y;
 
-            Window.VSync = VSyncMode.On; //turn on VSync to prevent the refresh rate from going over the display's default
-            Window.Run(RefreshRate, RefreshRate); //run the window (begins the render pipeline)
+            GameWindow.VSync = VSyncMode.On;
+            GameWindow.Run(GameWindowRefreshRate, GameWindowRefreshRate);
         }
 
         [STAThread]
-        public static void Main() //this is the main thread (runs first)
+        public static void Main()
         {
             Console.Title = "Instant Gameworks";
             Console.WriteLine("Instant Gameworks (c)  2018");
+            
+            DebugWriteLine("Main thread startup");
+            
+            // Set window settings
+            DisplayDevice DefaultDisplay = DisplayDevice.Default;
+            GameWindowRefreshRate = DefaultDisplay.RefreshRate;
+            GameWindowSize = new Vector2(1280, 720); 
+            GameWindowPosition = new Vector2(100, 50);
+            GameWindowBorder = WindowBorder.Fixed;
+            GameWindowState = WindowState.Normal;
 
-            //Main
-            DebugWriteLine("Init");
+            // Create window
+            DebugWriteLine("Initializing GameworksWindow");
 
-            //Set window settings
-            WindowDisplay = DisplayDevice.Default; //default display
-            RefreshRate = 144; //limit FPS to 144hz
-            WindowSize = new Vector2(1280, 720); //set window size to 1280x720
-            WindowPosition = new Vector2(100, 50); //a bit from the top left corner
-            WindowBorder = WindowBorder.Fixed; //can't resize window
-            WindowState = WindowState.Normal; //not maximized or minimized
-
-            //Create window
-            ThreadStart GameThread = new ThreadStart(OpenWindow);
+            ThreadStart GameThread = new ThreadStart(CreateGameworksWindow);
             Thread RunGame = new Thread(GameThread);
-            RunGame.Start(); //create the window as a separate thread (it will run in the background)
+            RunGame.Start();
 
-            //Wait for window to initialize
-            while (Window == null) { }
-            while (!Window.Exists) { }
+            // Wait for window to initialize
+            while (GameWindow == null) { }
+            while (!GameWindow.Exists) { }
 
-            ConsoleApp.HideConsole();
-
-
-
-            //
-            //
-            //
-            //
-            //
-            //
-            //   THIS POINT ON IS ALL GAME LOGIC. EVERYTHING ELSE IS HANDLED INTERNALLY BY THE GAMEWORKSWINDOW CLASS
-            //
-            //
-            //
-            //
-            //
-            //
+//            ConsoleApp.HideConsole();
 
 
 
-            //Add game objects
-            StudioCamera Camera = new StudioCamera(); //Create new studio-esque camera, ability to move with WASD, right mouse button, and scroll wheel
-            Camera.MoveSensitivity = 0.08f; //Set the movement sensitivity
-            Window.Camera = Camera; //Assign the current view camera to be this
+
+            //
+            //
+            //
+            // Game logic
+            //
+            //
+            //
+            
+            // Initialize camera
+            StudioCamera Camera = new StudioCamera();
+            Camera.MoveSensitivity = 0.08f;
+            GameWindow.Camera = Camera;
             
             
-            var Airplane = Window.AddObject(@"Testing\airplane.igwo"); //Import "airplane.igwo" directly into the render queue
+            var Airplane = GameWindow.AddObject(@"Testing\airplane.igwo");
             Airplane.Scale = new Vector3(10, 10, 10);
             Airplane.Position = new Vector3(0, 0, -4);
 
-            var Land = Window.AddObject(@"Testing\land.igwo"); //Import "land.igwo" directly into the render queue
+            var Land = GameWindow.AddObject(@"Testing\land.igwo");
             Land.Scale = new Vector3(10, 30, 10);
             Land.Position = new Vector3(0, -20, 0);
-            
-            
-
-            bool[] KeysDown = new bool[] { false, false, false, false }; //used to implement the camera (WASD keys)
 
 
-            //mouse settings for camera
-            Vector2 mouseLastPos = new Vector2(0, 0);
-            bool isRightMouseDown = false;
-            bool settingMousePosition = false;
 
             double _time = 0;
-            float k;
-            void OnUpdateFrame(object sender, FrameEventArgs e)
+            void OnUpdateFrameTimer(object sender, FrameEventArgs e)
             {
-                _time += e.Time; //add time since last frame
-
-
-                //give airplane a cartoonish flying animation
-                k = (float)_time * 0.3f;
+                _time += e.Time;
+            }
+            void ObjectUpdateFrame(object sender, FrameEventArgs e)
+            {
                 Airplane.Rotation = new Vector3((float)Math.Cos(_time * 0.75f) * 0.1f,
                                                 (float)Math.Sin(_time * 0.5f) * 0.1f + 0.4f,
                                                 (float)Math.Sin(_time * 0.5f) * 0.125f);
-                Airplane.Position = new Vector3((float)(Math.Sin(k) * 0.01f), (float)(Math.Cos(k * 5f) * 0.025f), -4.0f);
-
-
-                //set camera's hue
+                Airplane.Position = new Vector3((float)(Math.Sin(_time) * 0.01f), (float)(Math.Cos(_time * 5f) * 0.025f), -4.0f);
+                
                 float hue = ((float)_time * 0.1f) % 1f;
                 var color = OpenTK.Graphics.Color4.FromHsv(new Vector4(hue, 0.5f, 0.5f, 0.5f));
-                Airplane.Color = color; //we can set color!
+                //Airplane.Color = color;
+            }
 
-                if (isRightMouseDown) //if the camera is being rotated, keep the mouse in the same spot on the screen
+            // Camera implementation
+            Dictionary<Key, bool> KeysDown = new Dictionary<Key, bool>() { [Key.W] = false, [Key.A] = false, [Key.S] = false, [Key.D] = false };
+
+            Vector2 LastMousePosition = new Vector2(0, 0);
+            bool IsRightMouseDown = false;
+            bool IsSettingMousePosition = false;
+            void CameraUpdateFrame(object sender, FrameEventArgs e)
+            {
+                if (IsRightMouseDown) //if the camera is being rotated, keep the mouse in the same spot on the screen
                 {
-                    settingMousePosition = true;
-                    Mouse.SetPosition(mouseLastPos.X + Window.X + 8, mouseLastPos.Y + Window.Y + 31);
+                    IsSettingMousePosition = true;
+                    Mouse.SetPosition(LastMousePosition.X + GameWindow.X + 8, LastMousePosition.Y + GameWindow.Y + 31);
                 }
-                
-                if (KeysDown[0] == true) //W
+
+                if (KeysDown[Key.W] == true)
                 {
                     Camera.Move(0, 0, -1);
                 }
-                if (KeysDown[1] == true) //A
+                if (KeysDown[Key.A] == true)
                 {
                     Camera.Move(1, 0, 0);
                 }
-                if (KeysDown[2] == true) //S
+                if (KeysDown[Key.S] == true)
                 {
                     Camera.Move(0, 0, 1);
                 }
-                if (KeysDown[3] == true) //D
+                if (KeysDown[Key.D] == true)
                 {
                     Camera.Move(-1, 0, 0);
                 }
@@ -165,10 +152,10 @@ namespace InstantGameworks
             {
                 if (e.Button == MouseButton.Right)
                 {
-                    if (!isRightMouseDown)
+                    if (!IsRightMouseDown)
                     {
-                        isRightMouseDown = true;
-                        mouseLastPos = new Vector2(e.X, e.Y);
+                        IsRightMouseDown = true;
+                        LastMousePosition = new Vector2(e.X, e.Y);
                     }
                 }
             }
@@ -176,50 +163,53 @@ namespace InstantGameworks
             {
                 if (e.Button == MouseButton.Right)
                 {
-                    isRightMouseDown = false;
+                    IsRightMouseDown = false;
                 }
             }
             void MouseMove(object sender, MouseMoveEventArgs e) //triggered whenever the mouse is moved
             {
-                if (Window.Focused && isRightMouseDown && !settingMousePosition) //if the window's in focus, the RMB is down, and the program isn't doing it
+                if (GameWindow.Focused && IsRightMouseDown && !IsSettingMousePosition) //if the window's in focus, the RMB is down, and the program isn't doing it
                 {
                     Camera.AddRotation(e.XDelta, e.YDelta);
                 }
-                settingMousePosition = false;
+                IsSettingMousePosition = false;
             }
-            void KeyDown(object sender, KeyboardKeyEventArgs e) //triggered whenever a key is pressed
+            void KeyDown(object sender, KeyboardKeyEventArgs e)
             {
                 switch (e.Key)
                 {
                     case Key.W:
-                        KeysDown[0] = true;
+                        KeysDown[Key.W] = true;
                         break;
                     case Key.A:
-                        KeysDown[1] = true;
+                        KeysDown[Key.A] = true;
                         break;
                     case Key.S:
-                        KeysDown[2] = true;
+                        KeysDown[Key.S] = true;
                         break;
                     case Key.D:
-                        KeysDown[3] = true;
+                        KeysDown[Key.D] = true;
+                        break;
+                    case Key.Escape:
+                        GameWindow.Exit();
                         break;
                 }
             }
-            void KeyUp(object sender, KeyboardKeyEventArgs e) //triggered whenever a key is released
+            void KeyUp(object sender, KeyboardKeyEventArgs e)
             {
                 switch (e.Key)
                 {
                     case Key.W:
-                        KeysDown[0] = false;
+                        KeysDown[Key.W] = false;
                         break;
                     case Key.A:
-                        KeysDown[1] = false;
+                        KeysDown[Key.A] = false;
                         break;
                     case Key.S:
-                        KeysDown[2] = false;
+                        KeysDown[Key.S] = false;
                         break;
                     case Key.D:
-                        KeysDown[3] = false;
+                        KeysDown[Key.D] = false;
                         break;
                 }
             }
@@ -230,20 +220,22 @@ namespace InstantGameworks
 
             //assign OnUpdateFrame
             DebugWriteLine("Adding update frame events");
-            Window.UpdateFrame += OnUpdateFrame;
+            GameWindow.UpdateFrame += OnUpdateFrameTimer;
+            GameWindow.UpdateFrame += ObjectUpdateFrame;
+            GameWindow.UpdateFrame += CameraUpdateFrame;
 
             //assign input events
             DebugWriteLine("Adding input events");
-            Window.MouseDown += MouseDown;
-            Window.MouseUp += MouseUp;
-            Window.MouseMove += MouseMove;
-            Window.KeyDown += KeyDown;
-            Window.KeyUp += KeyUp;
-            Window.MouseWheel += MouseWheel;
+            GameWindow.MouseDown += MouseDown;
+            GameWindow.MouseUp += MouseUp;
+            GameWindow.MouseMove += MouseMove;
+            GameWindow.KeyDown += KeyDown;
+            GameWindow.KeyUp += KeyUp;
+            GameWindow.MouseWheel += MouseWheel;
 
 
             //Exit
-            while (Window.Exists) { } //wait until the window is exited
+            while (GameWindow.Exists) { } //wait until the window is exited
             ConsoleApp.ShowConsole();
             DebugWriteLine("Shutting down");
 

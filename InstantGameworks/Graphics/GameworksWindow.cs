@@ -19,7 +19,7 @@ namespace InstantGameworks.Graphics
     public class GameworksWindow : GameWindow
     {
         //Variables
-        private int _program;
+        private int _programId;
         private List<int> _shadersList = new List<int>();
         private Matrix4 _cameraMatrix;
 
@@ -31,15 +31,15 @@ namespace InstantGameworks.Graphics
 
         //Initialization defaults
         public GameworksWindow()
-            :base(1280, //Width
-                  720, //Height
-                  new GraphicsMode(32, 8, 0, 8), //GraphicsMode
-                  "InstantGameworks", //Title
-                  GameWindowFlags.FixedWindow, //Flags
-                  DisplayDevice.Default, //Which monitor
-                  4, //Major
-                  0, //Minor
-                  GraphicsContextFlags.Default) //Context flags
+            :base(1280,
+                  720,
+                  new GraphicsMode(32, 8, 0, 8),
+                  "InstantGameworks",
+                  GameWindowFlags.FixedWindow,
+                  DisplayDevice.Default,
+                  4,
+                  0,
+                  GraphicsContextFlags.Default)
         {
             Title += " (OpenGL " + GL.GetString(StringName.Version) + ")";
             CursorVisible = true;
@@ -47,14 +47,13 @@ namespace InstantGameworks.Graphics
             EnableCaps.Add(EnableCap.DepthTest);
             EnableCaps.Add(EnableCap.Multisample);
         }
-
-        //On initial load
+        
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            //Create program
-            _program = GL.CreateProgram();
+            // Create program
+            _programId = GL.CreateProgram();
 
             //Adjust render settings
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
@@ -66,13 +65,10 @@ namespace InstantGameworks.Graphics
             _shadersList.Add(vertexShader);
             _shadersList.Add(fragmentShader);
 
-            Shaders.CompileShaders(_program, _shadersList);
+            Shaders.CompileShaders(_programId, _shadersList);
             
-
-
-
             //Debug
-            string DebugInfo = GL.GetProgramInfoLog(_program);
+            string DebugInfo = GL.GetProgramInfoLog(_programId);
             Console.WriteLine(string.IsNullOrEmpty(DebugInfo) ? "Graphics success" : DebugInfo);
 
             //Add closed event
@@ -85,16 +81,14 @@ namespace InstantGameworks.Graphics
         {
             _time += e.Time;
             Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f / e.Time) + "fps";
-
-
+            
             //Adjust viewport
             GL.Viewport(0, 0, Width, Height);
 
             //Clear frame
             GL.ClearColor(Color.CornflowerBlue);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-
+            
             //Reset caps
             foreach (EnableCap cap in Enum.GetValues(typeof(EnableCap)))
             {
@@ -105,27 +99,21 @@ namespace InstantGameworks.Graphics
                 GL.Enable(cap);
             }
 
+            // Render frame
+            GL.UseProgram(_programId);
 
-            //Render frame
-
-            GL.UseProgram(_program);
-
-
-
+            // Update camera
             Camera.AspectRatio = (float)Width / Height;
             Camera.Update();
             _cameraMatrix = Camera.PerspectiveMatrix;
             GL.UniformMatrix4(3, false, ref _cameraMatrix);
-
-            var currentObjects = RenderObjects.ToList();
-            foreach (var renderObject in currentObjects)
+            
+            foreach (var renderObject in RenderObjects)
             {
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
                 renderObject.Render();
             }
-
-
-            //Update frame
+            
             SwapBuffers();
             base.OnRenderFrame(e);
         }
@@ -135,8 +123,6 @@ namespace InstantGameworks.Graphics
             base.OnUpdateFrame(e);
         }
         
-
-        //Run code before exit
         private void OnExit(object sender, EventArgs eventArgs)
         {
             Exit();
@@ -152,19 +138,10 @@ namespace InstantGameworks.Graphics
             {
                 obj.Dispose();
             }
-            GL.DeleteProgram(_program);
+            GL.DeleteProgram(_programId);
             base.Exit();
         }
-
-
-
-
-
-
-
-
-
-
+        
 
         public Object3D AddObject(string fileName)
         {
