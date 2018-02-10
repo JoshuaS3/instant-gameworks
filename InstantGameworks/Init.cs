@@ -54,7 +54,7 @@ namespace InstantGameworks
             
             // Set window settings
             DisplayDevice DefaultDisplay = DisplayDevice.Default;
-            GameWindowRefreshRate = DefaultDisplay.RefreshRate;
+            GameWindowRefreshRate = 0;//DefaultDisplay.RefreshRate;
             GameWindowSize = new Vector2(1280, 720); 
             GameWindowPosition = new Vector2(0, 00);
             GameWindowBorder = WindowBorder.Fixed;
@@ -86,24 +86,30 @@ namespace InstantGameworks
             
             // Initialize camera
             StudioCamera Camera = new StudioCamera();
-            Camera.MoveSensitivity = 0.08f;
+            Camera.MoveSensitivity = 0.16f;
             GameWindow.Camera = Camera;
             
             
             var Airplane = GameWindow.AddObject(@"Testing\airplane.igwo");
-            Airplane.Scale = new Vector3(10, 10, 10);
-            Airplane.Position = new Vector3(0, 0, -4);
+            Airplane.Scale = new Vector3(1f, 1f, 1f);
+            Airplane.Position = new Vector3(0, 0, -0.4f);
 
-            var Land = GameWindow.AddObject(@"Testing\land.igwo");
-            Land.Scale = new Vector3(10, 30, 10);
-            Land.Position = new Vector3(0, -20, 0);
+            var Land = GameWindow.AddObject(@"Testing\unfixedLand.igwo");
+            Land.Scale = new Vector3(4, 3.5f, 4);
+            Land.Position = new Vector3(0, -7, 0);
             Land.Color = Color4.DarkGreen;
 
+            var Water = GameWindow.AddObject(@"Testing\water.igwo");
+            Water.Scale = new Vector3(4, 3.5f, 4);
+            Water.Position = new Vector3(0, -6.5f, 0);
+            Water.Color = Color4.Navy;
 
 
+            double _lastTime = 0;
             double _time = 0;
             void OnUpdateFrameTimer(object sender, FrameEventArgs e)
             {
+                _lastTime = _time;
                 _time += e.Time;
             }
             void ObjectUpdateFrame(object sender, FrameEventArgs e)
@@ -115,7 +121,7 @@ namespace InstantGameworks
                 
                 float hue = ((float)_time * 0.1f) % 1f;
                 var color = Color4.FromHsv(new Vector4(hue, 0.5f, 0.5f, 0.5f));
-                Airplane.Color = color;
+                //Airplane.Color = color;
             }
 
             // Camera implementation
@@ -126,32 +132,33 @@ namespace InstantGameworks
             bool IsSettingMousePosition = false;
             void CameraUpdateFrame(object sender, FrameEventArgs e)
             {
-                if (IsRightMouseDown) //if the camera is being rotated, keep the mouse in the same spot on the screen
+                if (IsRightMouseDown)
                 {
                     IsSettingMousePosition = true;
                     Mouse.SetPosition(LastMousePosition.X + GameWindow.X + 8, LastMousePosition.Y + GameWindow.Y + 31);
                 }
 
+                float AdjustedSpeedForFramerate = 144f / (1f / ((float)_time - (float)_lastTime));
                 if (KeysDown[Key.W] == true)
                 {
-                    Camera.Move(0, 0, -1);
+                    Camera.Move(0, 0, -AdjustedSpeedForFramerate);
                 }
                 if (KeysDown[Key.A] == true)
                 {
-                    Camera.Move(1, 0, 0);
+                    Camera.Move(AdjustedSpeedForFramerate, 0, 0);
                 }
                 if (KeysDown[Key.S] == true)
                 {
-                    Camera.Move(0, 0, 1);
+                    Camera.Move(0, 0, AdjustedSpeedForFramerate);
                 }
                 if (KeysDown[Key.D] == true)
                 {
-                    Camera.Move(-1, 0, 0);
+                    Camera.Move(-AdjustedSpeedForFramerate, 0, 0);
                 }
             }
 
             
-            void MouseDown(object sender, MouseButtonEventArgs e) //is triggered whenever a mouse button is pressed
+            void MouseDown(object sender, MouseButtonEventArgs e)
             {
                 if (e.Button == MouseButton.Right)
                 {
@@ -162,16 +169,16 @@ namespace InstantGameworks
                     }
                 }
             }
-            void MouseUp(object sender, MouseButtonEventArgs e) //triggered whenever a mouse button is released
+            void MouseUp(object sender, MouseButtonEventArgs e)
             {
                 if (e.Button == MouseButton.Right)
                 {
                     IsRightMouseDown = false;
                 }
             }
-            void MouseMove(object sender, MouseMoveEventArgs e) //triggered whenever the mouse is moved
+            void MouseMove(object sender, MouseMoveEventArgs e)
             {
-                if (GameWindow.Focused && IsRightMouseDown && !IsSettingMousePosition) //if the window's in focus, the RMB is down, and the program isn't doing it
+                if (GameWindow.Focused && IsRightMouseDown && !IsSettingMousePosition)
                 {
                     Camera.AddRotation(e.XDelta, e.YDelta);
                 }
@@ -196,6 +203,37 @@ namespace InstantGameworks
                     case Key.Escape:
                         GameWindow.Exit();
                         break;
+                    case Key.Keypad0:
+                        Airplane.Color = Color4.White;
+                        Land.Color = Color4.DarkGreen;
+                        break;
+                    case Key.Keypad1:
+                        Airplane.Color = new Color4(248 / 255f, 177 / 255f, 149 / 255f, 1);
+                        break;
+                    case Key.Keypad2:
+                        Airplane.Color = new Color4(246 / 255f, 114 / 255f, 128 / 255f, 1);
+                        break;
+                    case Key.Keypad3:
+                        Airplane.Color = new Color4(192 / 255f, 108 / 255f, 132 / 255f, 1);
+                        break;
+                    case Key.Keypad4:
+                        Airplane.Color = new Color4(108 / 255f, 91 / 255f, 123 / 255f, 1);
+                        break;
+                    case Key.Keypad5:
+                        Airplane.Color = new Color4(53 / 255f, 92 / 255f, 125 / 255f, 1);
+                        break;
+                    case Key.Keypad6:
+                        Airplane.Color = new Color4(46 / 255f, 71 / 255f, 86 / 255f, 1);
+                        break;
+                    case Key.Keypad7:
+                        Land.Color = new Color4(127 / 255f, 109 / 255f, 87 / 255f, 1);
+                        break;
+                    case Key.Keypad8:
+                        Land.Color = new Color4(227 / 255f, 209 / 255f, 173 / 255f, 1);
+                        break;
+                    case Key.Keypad9:
+                        Land.Color = new Color4(241 / 255f, 235 / 255f, 221 / 255f, 1);
+                        break;
                 }
             }
             void KeyUp(object sender, KeyboardKeyEventArgs e)
@@ -216,7 +254,7 @@ namespace InstantGameworks
                         break;
                 }
             }
-            void MouseWheel(object sender, MouseWheelEventArgs e) //triggered whenever the mouse wheel moves
+            void MouseWheel(object sender, MouseWheelEventArgs e)
             {
                 Camera.Move(0, 0, -e.Delta / Camera.MoveSensitivity);
             }
@@ -238,7 +276,8 @@ namespace InstantGameworks
 
 
             //Exit
-            while (GameWindow.Exists) { } //wait until the window is exited
+            Random r = new Random();
+            while (GameWindow.Exists) { }
             ConsoleApp.ShowConsole();
             DebugWriteLine("Shutting down");
 
