@@ -53,6 +53,7 @@
     <Compile Include="Graphics\Shaders.cs" />
     <Compile Include="Graphics\GameworksWindow.cs" />
     <Compile Include="Init.cs" />
+    <Compile Include="Logging.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConsoleApp.cs" />
     <Compile Include="Services\SysTime.cs" />
