@@ -25,7 +25,7 @@ namespace InstantGameworks.Graphics
         public Vector3 Position { get; set; } = Vector3.Zero;
         public Vector2 Orientation { get; set; } = new Vector2(0, 0);
         public Matrix4 PerspectiveMatrix { get; set; } = new Matrix4();
-        public float AspectRatio { get; set; } = 1280f / 720f;
+        public float AspectRatio { get; set; } = 16f / 9f;
 
         public float FieldOfView { get; set; } = 90;
         public float MinViewDistance { get; set; } = 0.01f;
@@ -65,8 +65,8 @@ namespace InstantGameworks.Graphics
 
     public class StudioCamera : Camera
     {
-        public float MoveSensitivity = 0.3f;
-        public float LookSensitivity = 0.0025f;
+        public float MoveSensitivity { get; set; } = 0.3f;
+        public float LookSensitivity { get; set; } = 0.0025f;
 
         public void AddRotation(float DeltaX, float DeltaY)
         {

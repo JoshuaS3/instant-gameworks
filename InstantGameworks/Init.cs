@@ -1,5 +1,4 @@
-﻿#define LOGGING
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -8,7 +7,8 @@ using System.Threading;
 using OpenTK;
 using OpenTK.Input;
 using OpenTK.Graphics;
-using InstantGameworks.Services;
+
+using InstantGameworks;
 using InstantGameworks.Graphics;
 using InstantGameworks.Graphics.Import;
 
@@ -17,8 +17,6 @@ namespace InstantGameworks
 {
     class Init
     {
-        private static void DebugWriteLine(string output) => Console.WriteLine(SysTime.GetTime() + " " + output);
-        
         private static GameworksWindow GameWindow;
         private static IntPtr GameWindowHandle;
 
@@ -52,7 +50,7 @@ namespace InstantGameworks
             Console.Title = "Instant Gameworks";
             Console.WriteLine("Instant Gameworks (c)  2018");
             
-            DebugWriteLine("Main thread startup");
+            Logging.LogEvent("Main thread startup");
             
             // Set window settings
             DisplayDevice DefaultDisplay = DisplayDevice.Default;
@@ -60,20 +58,18 @@ namespace InstantGameworks
             GameWindowSize = new Vector2(1280, 720); 
             GameWindowPosition = new Vector2(0, 00);
             GameWindowBorder = WindowBorder.Fixed;
-            GameWindowState = WindowState.Fullscreen;
+            GameWindowState = WindowState.Normal;
 
             // Create window
-            DebugWriteLine("Initializing GameworksWindow");
+            Logging.LogEvent("Initializing GameworksWindow");
 
             ThreadStart GameThread = new ThreadStart(CreateGameworksWindow);
             Thread RunGame = new Thread(GameThread);
             RunGame.Start();
 
             // Wait for window to initialize
-            while (GameWindow == null) { }
-            while (!GameWindow.Exists) { }
-
-//            ConsoleApp.HideConsole();
+            SpinWait.SpinUntil( () => GameWindow != null && GameWindow.Exists );
+            
 
 
 
@@ -85,17 +81,16 @@ namespace InstantGameworks
             //
             //
             //
-            
+
             // Initialize camera
-            StudioCamera Camera = new StudioCamera();
-            Camera.MoveSensitivity = 0.16f;
+            StudioCamera Camera = new StudioCamera
+            {
+                MoveSensitivity = 0.01f
+            };
             GameWindow.Camera = Camera;
             
             
-            var Airplane = GameWindow.AddObject(@"Testing\airplane.igwo");
-            Airplane.Scale = new Vector3(1f, 1f, 1f);
-            Airplane.Position = new Vector3(0, 0, -0.4f);
-
+            // Import objects
             var Land = GameWindow.AddObject(@"Testing\unfixedLand.igwo");
             Land.Scale = new Vector3(4, 3.5f, 4);
             Land.Position = new Vector3(0, -7, 0);
@@ -103,8 +98,11 @@ namespace InstantGameworks
 
             var Water = GameWindow.AddObject(@"Testing\water.igwo");
             Water.Scale = new Vector3(4, 3.5f, 4);
-            Water.Position = new Vector3(0, -6.5f, 0);
+            Water.Position = new Vector3(0, -7.25f, 0);
             Water.Color = Color4.Navy;
+
+            var Airplane = GameWindow.AddObject(@"Testing\airplane.igwo");
+            Airplane.Scale = new Vector3(1f, 1f, 1f);
 
 
             double _lastTime = 0;
@@ -116,10 +114,10 @@ namespace InstantGameworks
             }
             void ObjectUpdateFrame(object sender, FrameEventArgs e)
             {
-                Airplane.Rotation = new Vector3((float)Math.Cos(_time * 0.75f) * 0.1f,
-                                                (float)Math.Sin(_time * 0.5f) * 0.1f + 0.4f,
-                                                (float)Math.Sin(_time * 0.5f) * 0.125f);
-                Airplane.Position = new Vector3((float)(Math.Sin(_time) * 0.01f), (float)(Math.Cos(_time * 5f) * 0.025f), -4.0f);
+                Airplane.Rotation = new Vector3((float)Math.Cos(_time * 0.75f) * 0.05f,
+                                                (float)Math.Sin(_time * 0.5f) * 0.05f + 0.4f,
+                                                (float)Math.Sin(_time * 0.5f) * 0.05f);
+                Airplane.Position = new Vector3((float)(Math.Sin(_time) * 0.001f), (float)(Math.Cos(_time * 5f) * 0.0025f), -0.4f);
                 
                 float hue = ((float)_time * 0.1f) % 1f;
                 var color = Color4.FromHsv(new Vector4(hue, 0.5f, 0.5f, 0.5f));
@@ -258,17 +256,17 @@ namespace InstantGameworks
             }
             void MouseWheel(object sender, MouseWheelEventArgs e)
             {
-                Camera.Move(0, 0, -e.Delta / Camera.MoveSensitivity);
+                Camera.Move(0, 0, -e.Delta / Camera.MoveSensitivity * 0.25f);
             }
 
             //assign OnUpdateFrame
-            DebugWriteLine("Adding update frame events");
+            Logging.LogEvent("Adding update frame events");
             GameWindow.UpdateFrame += OnUpdateFrameTimer;
             GameWindow.UpdateFrame += ObjectUpdateFrame;
             GameWindow.UpdateFrame += CameraUpdateFrame;
 
             //assign input events
-            DebugWriteLine("Adding input events");
+            Logging.LogEvent("Adding input events");
             GameWindow.MouseDown += MouseDown;
             GameWindow.MouseUp += MouseUp;
             GameWindow.MouseMove += MouseMove;
@@ -278,11 +276,11 @@ namespace InstantGameworks
 
 
             //Exit
-            Random r = new Random();
-            while (GameWindow.Exists) { }
-            ConsoleApp.ShowConsole();
-            DebugWriteLine("Shutting down");
+            RunGame.Join();
+            NativeMethods.ConsoleApp.ShowConsole();
+            Logging.LogEvent("Shutting down");
 
+            Logging.WriteToFile();
             //end of thread
         }
 

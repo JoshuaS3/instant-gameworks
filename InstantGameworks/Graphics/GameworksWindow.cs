@@ -69,7 +69,7 @@ namespace InstantGameworks.Graphics
             
             //Debug
             string DebugInfo = GL.GetProgramInfoLog(_programId);
-            Console.WriteLine(string.IsNullOrEmpty(DebugInfo) ? "Graphics success" : DebugInfo);
+            Logging.LogEvent(string.IsNullOrEmpty(DebugInfo) ? "Graphics success" : DebugInfo);
 
             //Add closed event
             Closed += OnExit;

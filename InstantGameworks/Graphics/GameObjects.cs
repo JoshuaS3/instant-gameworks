@@ -15,8 +15,6 @@ namespace InstantGameworks.Graphics
 {
     public class Instance : IDisposable
     {
-        private List<string> _inherits = new List<string>() { };
-
         public bool Archivable { get; set; } = true;
         public virtual string ClassName { get; } = "Instance";
         public virtual string Name { get; set; } = "Instance";
@@ -27,18 +25,8 @@ namespace InstantGameworks.Graphics
             return Name;
         }
 
-        public bool Inherits(string className)
-        {
-            if (_inherits.Contains(className))
-            {
-                return true;
-            }
-            return false;
-        }
-
         public void Dispose()
         {
-            Name = null;
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -49,8 +37,6 @@ namespace InstantGameworks.Graphics
 
     public class LightSource : Instance
     {
-        private List<string> _inherits = new List<string>() { "Instance" };
-
         public override string ClassName { get; } = "LightSource";
         public override string Name { get; set; } = "LightSource";
 
@@ -61,8 +47,6 @@ namespace InstantGameworks.Graphics
 
     public class PointLight : LightSource
     {
-        private List<string> _inherits = new List<string>() { "Instance", "LightSource" };
-
         public override string ClassName { get; } = "PointLight";
         public override string Name { get; set; } = "PointLight";
 
@@ -98,8 +82,6 @@ namespace InstantGameworks.Graphics
 
     public class Object3D : Instance
     {
-        private List<string> _inherits = new List<string>() { "Instance" };
-
         public override string ClassName { get; } = "Object3D";
         public override string Name { get; set; } = "Object3D";
 
@@ -144,7 +126,7 @@ namespace InstantGameworks.Graphics
         public Face[] Faces { get => _faces; set => _faces = value; }
 
 
-        public delegate void RenderEvent();
+        public delegate void RenderEvent(object sender, EventArgs e);
         public event RenderEvent OnRender = delegate { };
 
 
@@ -212,7 +194,7 @@ namespace InstantGameworks.Graphics
         
         private void _updateColor(Color4 color)
         {
-            void updateWhenRendered()
+            void updateWhenRendered(object sender, EventArgs e)
             {
                 _color = color;
                 _sortData();
@@ -272,7 +254,7 @@ namespace InstantGameworks.Graphics
 
         public void Render()
         {
-            OnRender();
+            OnRender(this, EventArgs.Empty);
             _modelView = Matrix4.CreateRotationX(Rotation.X) *
                          Matrix4.CreateRotationY(Rotation.Y) *
                          Matrix4.CreateRotationZ(Rotation.Z) *
