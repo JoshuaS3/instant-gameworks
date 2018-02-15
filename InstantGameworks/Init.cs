@@ -55,10 +55,10 @@ namespace InstantGameworks
             // Set window settings
             DisplayDevice DefaultDisplay = DisplayDevice.Default;
             GameWindowRefreshRate = 0;//DefaultDisplay.RefreshRate;
-            GameWindowSize = new Vector2(1280, 720); 
+            GameWindowSize = new Vector2(1920, 1080); 
             GameWindowPosition = new Vector2(0, 00);
             GameWindowBorder = WindowBorder.Fixed;
-            GameWindowState = WindowState.Normal;
+            GameWindowState = WindowState.Fullscreen;
 
             // Create window
             Logging.LogEvent("Initializing GameworksWindow");
@@ -279,9 +279,10 @@ namespace InstantGameworks
             RunGame.Join();
             NativeMethods.ConsoleApp.ShowConsole();
             Logging.LogEvent("Shutting down");
-
-            Logging.WriteToFile();
-            //end of thread
+            
+            /*Logging.WriteToFile();
+            Logging.DisplayLog().Join();
+            *///end of thread
         }
 
     }

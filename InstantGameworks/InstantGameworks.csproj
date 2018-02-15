@@ -60,10 +60,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Graphics\GLSL\fragmentshader.glsl">
+    <None Include="Shaders\fragmentshader.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Graphics\GLSL\vertexshader.glsl">
+    <None Include="Shaders\vertexshader.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="OpenTK.dll.config" />

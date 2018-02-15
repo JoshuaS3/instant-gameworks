@@ -60,8 +60,8 @@ namespace InstantGameworks.Graphics
             GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
 
             //Create and compile shaders
-            int vertexShader = Shaders.CreateShader(@"Graphics\GLSL\vertexshader.glsl", ShaderType.VertexShader);
-            int fragmentShader = Shaders.CreateShader(@"Graphics\GLSL\fragmentshader.glsl", ShaderType.FragmentShader);
+            int vertexShader = Shaders.CreateShader(@"Shaders\vertexshader.glsl", ShaderType.VertexShader);
+            int fragmentShader = Shaders.CreateShader(@"Shaders\fragmentshader.glsl", ShaderType.FragmentShader);
             _shadersList.Add(vertexShader);
             _shadersList.Add(fragmentShader);
 
