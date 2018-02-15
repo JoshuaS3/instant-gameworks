@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,66 +10,8 @@ using OpenTK.Graphics.OpenGL4;
 
 using InstantGameworks.Graphics.Import;
 
-namespace InstantGameworks.Graphics
+namespace InstantGameworks.Graphics.GameObjects
 {
-    public class Instance : IDisposable
-    {
-        public bool Archivable { get; set; } = true;
-        public virtual string ClassName { get; } = "Instance";
-        public virtual string Name { get; set; } = "Instance";
-
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-        }
-    }
-
-    public class LightSource : Instance
-    {
-        public override string ClassName { get; } = "LightSource";
-        public override string Name { get; set; } = "LightSource";
-
-        public virtual Color4 Color { get; set; }
-        public virtual float Intensity { get; set; }
-        public virtual bool Enabled { get; set; }
-    }
-
-    public class PointLight : LightSource
-    {
-        public override string ClassName { get; } = "PointLight";
-        public override string Name { get; set; } = "PointLight";
-
-        public override Color4 Color { get; set; }
-        public override float Intensity { get; set; }
-        public override bool Enabled { get; set; }
-
-        public float Radius { get; set; }
-
-        public PointLight(Color4 color, float intensity, float radius)
-        {
-            Color = color;
-            Intensity = intensity;
-            Radius = radius;
-            Enabled = true;
-        }
-
-    }
-
-
-
-
-
-
     struct DrawVertex
     {
         public static int SizeInBytes = (4 + 4 + 3 + 3) * 4;
@@ -107,11 +48,14 @@ namespace InstantGameworks.Graphics
         public Vector3 Rotation { get => _rotation; set => _rotation = value; }
         public Vector3 Velocity { get => _velocity; set => _velocity = value; }
         public Vector3 RotationalVelocity { get => _rotationalVelocity; set => _rotationalVelocity = value; }
-        public Color4 Color {
-            get {
+        public Color4 Color
+        {
+            get
+            {
                 return _color;
             }
-            set {
+            set
+            {
                 _color = value;
                 _updateColor(value); //reset VBO
             }
@@ -156,7 +100,7 @@ namespace InstantGameworks.Graphics
             _vertexTextureCoordinates = _vertText;
             _vertexNormals = _vertNorm;
             _faces = _face;
-            
+
             _sortData();
             _vertexCount = Faces.Length * 3;
 
@@ -191,7 +135,7 @@ namespace InstantGameworks.Graphics
 
             GL.BindVertexArray(_objectArray);
         }
-        
+
         private void _updateColor(Color4 color)
         {
             void updateWhenRendered(object sender, EventArgs e)

@@ -12,6 +12,7 @@ using System.Drawing;
 using System.IO;
 
 using InstantGameworks.Graphics.Import;
+using InstantGameworks.Graphics.GameObjects;
 
 
 namespace InstantGameworks.Graphics

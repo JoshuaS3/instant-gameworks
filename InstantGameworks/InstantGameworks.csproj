@@ -49,8 +49,10 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\GameObjects\LightSource.cs" />
+    <Compile Include="Graphics\GameObjects\Object3D.cs" />
     <Compile Include="Graphics\Import\InstantGameworksObject.cs" />
-    <Compile Include="Graphics\GameObjects.cs" />
+    <Compile Include="Graphics\GameObjects\Instance.cs" />
     <Compile Include="Graphics\Shaders.cs" />
     <Compile Include="Graphics\GameworksWindow.cs" />
     <Compile Include="Init.cs" />

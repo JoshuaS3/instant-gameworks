@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace InstantGameworks.Graphics.GameObjects
+{
+    public class Instance : IDisposable
+    {
+        private Instance _parent = null;
+
+        private List<Instance> children = new List<Instance>();
+        public bool Archivable { get; set; } = true;
+        public virtual string ClassName { get; } = "Instance";
+        public virtual string Name { get; set; } = "Instance";
+        public virtual Instance Parent { get => _parent;
+            set { value.SetAsParent(this); _parent = value; }
+        }
+
+        public Instance this[Instance child]
+        {
+            get { return children.Find(x => x.Name == child.Name); }
+        }
+
+        private void SetAsParent(Instance child)
+        {
+            children.Add(child);
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+        }
+    }
+
+
+
+
+
+
+    
+}

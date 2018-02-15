@@ -92,14 +92,20 @@ namespace InstantGameworks
             
             // Import objects
             var Land = GameWindow.AddObject(@"Testing\unfixedLand.igwo");
+            Land.Name = "Land";
             Land.Scale = new Vector3(4, 3.5f, 4);
             Land.Position = new Vector3(0, -7, 0);
             Land.Color = Color4.DarkGreen;
 
             var Water = GameWindow.AddObject(@"Testing\water.igwo");
+            Water.Name = "Water";
+            Water.Parent = Land;
             Water.Scale = new Vector3(4, 3.5f, 4);
             Water.Position = new Vector3(0, -7.25f, 0);
             Water.Color = Color4.Navy;
+
+            Console.WriteLine(Water.Name + "'s parent is " + Water.Parent.Name);
+            Console.WriteLine(Land.Name + "'s child is " + Land[Water].Name);
 
             var Airplane = GameWindow.AddObject(@"Testing\airplane.igwo");
             Airplane.Scale = new Vector3(1f, 1f, 1f);
