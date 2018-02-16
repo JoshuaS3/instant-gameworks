@@ -19,18 +19,17 @@ namespace InstantGameworks.Graphics
 {
     public class GameworksWindow : GameWindow
     {
-        //Variables
+        // Variables
         private int _programId;
         private List<int> _shadersList = new List<int>();
         private Matrix4 _cameraMatrix;
 
-        public List<EnableCap> EnableCaps = new List<EnableCap>();
+        public List<EnableCap> EnableCaps { get; } = new List<EnableCap>(); // EnableCaps currently in use
+        public Camera Camera { get; set; } = new Camera(); // Current Camera object in use by the program
+        public List<Object3D> RenderObjects { get; } = new List<Object3D>(); // The program's current render queue
 
-        public Camera Camera = new Camera(); //Current Camera object in use by the program
-        public List<Object3D> RenderObjects = new List<Object3D>(); //List of objects in memory
 
-
-        //Initialization defaults
+        // Initialization defaults
         public GameworksWindow()
             :base(1280,
                   720,
@@ -56,11 +55,11 @@ namespace InstantGameworks.Graphics
             // Create program
             _programId = GL.CreateProgram();
 
-            //Adjust render settings
+            // Adjust render settings
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
 
-            //Create and compile shaders
+            // Create and compile shaders
             int vertexShader = Shaders.CreateShader(@"Shaders\vertexshader.glsl", ShaderType.VertexShader);
             int fragmentShader = Shaders.CreateShader(@"Shaders\fragmentshader.glsl", ShaderType.FragmentShader);
             _shadersList.Add(vertexShader);
@@ -68,29 +67,29 @@ namespace InstantGameworks.Graphics
 
             Shaders.CompileShaders(_programId, _shadersList);
             
-            //Debug
+            // Debug
             string DebugInfo = GL.GetProgramInfoLog(_programId);
             Logging.LogEvent(string.IsNullOrEmpty(DebugInfo) ? "Graphics success" : DebugInfo);
 
-            //Add closed event
+            // Add closed event
             Closed += OnExit;
         }
 
-        //Whenever a frame is rendered
+        // Whenever a frame is rendered
         private double _time;
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             _time += e.Time;
             Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f / e.Time) + "fps";
             
-            //Adjust viewport
+            // Adjust viewport
             GL.Viewport(0, 0, Width, Height);
 
-            //Clear frame
+            // Clear frame
             GL.ClearColor(Color.CornflowerBlue);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
-            //Reset caps
+            // Reset caps
             foreach (EnableCap cap in Enum.GetValues(typeof(EnableCap)))
             {
                 GL.Disable(cap);
