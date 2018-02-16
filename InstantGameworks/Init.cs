@@ -10,7 +10,6 @@ using OpenTK.Graphics;
 
 using InstantGameworks;
 using InstantGameworks.Graphics;
-using InstantGameworks.Graphics.Import;
 
 
 namespace InstantGameworks

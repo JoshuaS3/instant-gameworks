@@ -8,7 +8,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 
-using InstantGameworks.Graphics.Import;
+using InstantGameworksObject;
 
 namespace InstantGameworks.Graphics.GameObjects
 {
@@ -80,7 +80,7 @@ namespace InstantGameworks.Graphics.GameObjects
         private int _vertexPositionBuffer;
         private Matrix4 _modelView;
 
-        public Object3D(InstantGameworksObject data)
+        public Object3D(InstantGameworksObject.InstantGameworksObject data)
         {
             _init(data.Positions, data.TextureCoordinates, data.Normals, data.Faces);
         }

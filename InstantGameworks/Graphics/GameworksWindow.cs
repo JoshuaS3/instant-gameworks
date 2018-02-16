@@ -11,7 +11,7 @@ using OpenTK.Graphics.OpenGL4;
 using System.Drawing;
 using System.IO;
 
-using InstantGameworks.Graphics.Import;
+using InstantGameworksObject;
 using InstantGameworks.Graphics.GameObjects;
 
 
