@@ -14,9 +14,8 @@ namespace InstantGameworks.Graphics.GameObjects
 {
     struct DrawVertex
     {
-        public static int SizeInBytes = (4 + 4 + 3 + 3) * 4;
+        public static int SizeInBytes = (4 + 3 + 3) * 4;
         public Vector4 position;
-        public Color4 color;
         public Vector3 normal;
         public Vector3 texture;
     }
@@ -48,18 +47,7 @@ namespace InstantGameworks.Graphics.GameObjects
         public Vector3 Rotation { get => _rotation; set => _rotation = value; }
         public Vector3 Velocity { get => _velocity; set => _velocity = value; }
         public Vector3 RotationalVelocity { get => _rotationalVelocity; set => _rotationalVelocity = value; }
-        public Color4 Color
-        {
-            get
-            {
-                return _color;
-            }
-            set
-            {
-                _color = value;
-                _updateColor(value); //reset VBO
-            }
-        }
+        public Color4 Color { get => _color; set => _color = value; }
         public bool DoRender { get => _doRender; set => _doRender = value; }
         public int VertexCount { get => _vertexCount; set => _vertexCount = value; }
 
@@ -125,28 +113,11 @@ namespace InstantGameworks.Graphics.GameObjects
             GL.EnableVertexArrayAttrib(_objectArray, 0);
             GL.VertexArrayAttribFormat(_objectArray, 0, 4, VertexAttribType.Float, false, 0);
 
-            GL.VertexArrayAttribBinding(_objectArray, 1, 0);
-            GL.EnableVertexArrayAttrib(_objectArray, 1);
-            GL.VertexArrayAttribFormat(_objectArray, 1, 4, VertexAttribType.Float, false, 16);
-
             GL.VertexArrayVertexBuffer(_objectArray, 0, _vertexPositionBuffer, IntPtr.Zero, DrawVertex.SizeInBytes); //set _positionBuffer as part of _vertexArray
 
 
 
             GL.BindVertexArray(_objectArray);
-        }
-
-        private void _updateColor(Color4 color)
-        {
-            void updateWhenRendered(object sender, EventArgs e)
-            {
-                _color = color;
-                _sortData();
-                GL.BindVertexArray(_objectArray);
-                GL.NamedBufferSubData(_vertexPositionBuffer, IntPtr.Zero, _sortedVertices.Length * DrawVertex.SizeInBytes, _sortedVertices);
-                OnRender -= updateWhenRendered;
-            }
-            OnRender += updateWhenRendered;
         }
 
         private void _sortData()
@@ -162,9 +133,7 @@ namespace InstantGameworks.Graphics.GameObjects
 
                     Position thisPos = _vertexPositions[vertex.PositionIndex - 1];
                     nv.position = new Vector4(thisPos.X, thisPos.Y, thisPos.Z, 1);
-
-
-                    nv.color = Color;
+                    
 
                     /*
                     if (vertex.NormalIndex != -1)

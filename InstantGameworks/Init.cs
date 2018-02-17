@@ -10,6 +10,7 @@ using OpenTK.Graphics;
 
 using InstantGameworks;
 using InstantGameworks.Graphics;
+using InstantGameworks.Graphics.GameObjects;
 
 
 namespace InstantGameworks
@@ -68,7 +69,7 @@ namespace InstantGameworks
 
             // Wait for window to initialize
             SpinWait.SpinUntil( () => GameWindow != null && GameWindow.Exists );
-            
+
 
 
 
@@ -81,33 +82,25 @@ namespace InstantGameworks
             //
             //
 
+            Logging.LogEvent("Importing resources");
             // Initialize camera
             StudioCamera Camera = new StudioCamera
             {
                 MoveSensitivity = 0.01f
             };
             GameWindow.Camera = Camera;
-            
-            
+
+            // Establish lighting
+            var Sun = GameWindow.AddDirectionalLight();
+            Sun.Name = "Sun";
+            Sun.Color = Color4.Red;
+            Sun.RelativeDirection = new Vector3(0, -1, 0);
+
             // Import objects
-            var Land = GameWindow.AddObject(@"Testing\unfixedLand.igwo");
-            Land.Name = "Land";
-            Land.Scale = new Vector3(4, 3.5f, 4);
-            Land.Position = new Vector3(0, -7, 0);
-            Land.Color = Color4.DarkGreen;
-
-            var Water = GameWindow.AddObject(@"Testing\water.igwo");
-            Water.Name = "Water";
-            Water.Parent = Land;
-            Water.Scale = new Vector3(4, 3.5f, 4);
-            Water.Position = new Vector3(0, -7.25f, 0);
-            Water.Color = Color4.Navy;
-
-            Console.WriteLine(Water.Name + "'s parent is " + Water.Parent.Name);
-            Console.WriteLine(Land.Name + "'s child is " + Land[Water].Name);
-
-            var Airplane = GameWindow.AddObject(@"Testing\airplane.igwo");
-            Airplane.Scale = new Vector3(1f, 1f, 1f);
+            var Airplane = GameWindow.AddObject(@"Testing\weirdshape.igwo");
+            Airplane.Color = Color4.Red;
+            Airplane.Position = new Vector3(0, -.2f, -0.5f);
+            Airplane.Scale = new Vector3(.05f, .05f, 0.05f);
 
 
             double _lastTime = 0;
@@ -120,9 +113,8 @@ namespace InstantGameworks
             void ObjectUpdateFrame(object sender, FrameEventArgs e)
             {
                 Airplane.Rotation = new Vector3((float)Math.Cos(_time * 0.75f) * 0.05f,
-                                                (float)Math.Sin(_time * 0.5f) * 0.05f + 0.4f,
+                                                (float)_time*0.5f,
                                                 (float)Math.Sin(_time * 0.5f) * 0.05f);
-                Airplane.Position = new Vector3((float)(Math.Sin(_time) * 0.001f), (float)(Math.Cos(_time * 5f) * 0.0025f), -0.4f);
                 
                 float hue = ((float)_time * 0.1f) % 1f;
                 var color = Color4.FromHsv(new Vector4(hue, 0.5f, 0.5f, 0.5f));
@@ -207,37 +199,6 @@ namespace InstantGameworks
                         break;
                     case Key.Escape:
                         GameWindow.Exit();
-                        break;
-                    case Key.Keypad0:
-                        Airplane.Color = Color4.White;
-                        Land.Color = Color4.DarkGreen;
-                        break;
-                    case Key.Keypad1:
-                        Airplane.Color = new Color4(248 / 255f, 177 / 255f, 149 / 255f, 1);
-                        break;
-                    case Key.Keypad2:
-                        Airplane.Color = new Color4(246 / 255f, 114 / 255f, 128 / 255f, 1);
-                        break;
-                    case Key.Keypad3:
-                        Airplane.Color = new Color4(192 / 255f, 108 / 255f, 132 / 255f, 1);
-                        break;
-                    case Key.Keypad4:
-                        Airplane.Color = new Color4(108 / 255f, 91 / 255f, 123 / 255f, 1);
-                        break;
-                    case Key.Keypad5:
-                        Airplane.Color = new Color4(53 / 255f, 92 / 255f, 125 / 255f, 1);
-                        break;
-                    case Key.Keypad6:
-                        Airplane.Color = new Color4(46 / 255f, 71 / 255f, 86 / 255f, 1);
-                        break;
-                    case Key.Keypad7:
-                        Land.Color = new Color4(127 / 255f, 109 / 255f, 87 / 255f, 1);
-                        break;
-                    case Key.Keypad8:
-                        Land.Color = new Color4(227 / 255f, 209 / 255f, 173 / 255f, 1);
-                        break;
-                    case Key.Keypad9:
-                        Land.Color = new Color4(241 / 255f, 235 / 255f, 221 / 255f, 1);
                         break;
                 }
             }

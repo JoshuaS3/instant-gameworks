@@ -82,6 +82,9 @@
     <None Include="Testing\water.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Testing\weirdshape.igwo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Extra\InstantGameworks.ico">

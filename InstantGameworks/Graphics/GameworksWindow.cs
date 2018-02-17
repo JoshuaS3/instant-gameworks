@@ -24,6 +24,9 @@ namespace InstantGameworks.Graphics
         private List<int> _shadersList = new List<int>();
         private Matrix4 _cameraMatrix;
 
+        private List<DirectionalLight> _directionalLights = new List<DirectionalLight>(8); // more than 8 is a just mess
+        private List<PointLight> _pointLights = new List<PointLight>(512); // great doubt that a scene would consist of more than 512 lights
+
         public List<EnableCap> EnableCaps { get; } = new List<EnableCap>(); // EnableCaps currently in use
         public Camera Camera { get; set; } = new Camera(); // Current Camera object in use by the program
         public List<Object3D> RenderObjects { get; } = new List<Object3D>(); // The program's current render queue
@@ -46,6 +49,7 @@ namespace InstantGameworks.Graphics
             Icon = new Icon(@"Extra\InstantGameworks.ico");
             EnableCaps.Add(EnableCap.DepthTest);
             EnableCaps.Add(EnableCap.Multisample);
+            EnableCaps.Add(EnableCap.LineSmooth);
         }
         
         protected override void OnLoad(EventArgs e)
@@ -108,9 +112,12 @@ namespace InstantGameworks.Graphics
             _cameraMatrix = Camera.PerspectiveMatrix;
             GL.UniformMatrix4(3, false, ref _cameraMatrix);
             
+            
+            
             foreach (var renderObject in RenderObjects)
             {
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                GL.Uniform4(1, renderObject.Color);
                 renderObject.Render();
             }
             
@@ -156,6 +163,30 @@ namespace InstantGameworks.Graphics
             RenderFrame += Add;
             while (newObject == null) { }
             return newObject;
+        }
+
+        public PointLight AddPointLight()
+        {
+            var newObject = new PointLight();
+            _pointLights.Add(newObject);
+            return newObject;
+        }
+
+        public DirectionalLight AddDirectionalLight()
+        {
+            var newObject = new DirectionalLight();
+            _directionalLights.Add(newObject);
+            return newObject;
+        }
+
+        public void RemovePointLight(PointLight pointLight)
+        {
+            _pointLights.Remove(pointLight);
+        }
+
+        public void RemoveDirectionalLight(DirectionalLight directionalLight)
+        {
+            _directionalLights.Remove(directionalLight);
         }
     }
 }
