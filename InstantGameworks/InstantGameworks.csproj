@@ -79,10 +79,10 @@
     <None Include="Testing\sphere.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Testing\water.igwo">
+    <None Include="Testing\teapot.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Testing\weirdshape.igwo">
+    <None Include="Testing\water.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

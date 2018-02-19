@@ -99,7 +99,6 @@ namespace InstantGameworks
             // Import objects
             var Land = GameWindow.AddObject(@"Testing\sphere.igwo");
             Land.Color = Color4.Red;
-            Land.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             Land.Position = new Vector3(0, 0, -1);
 
             double _lastTime = 0;
@@ -111,6 +110,7 @@ namespace InstantGameworks
             }
             void ObjectUpdateFrame(object sender, FrameEventArgs e)
             {
+                Land.Rotation += new Vector3(0, 0.01f, 0);
             }
 
             // Camera implementation
