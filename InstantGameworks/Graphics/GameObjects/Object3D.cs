@@ -25,14 +25,20 @@ namespace InstantGameworks.Graphics.GameObjects
         public override string ClassName { get; } = "Object3D";
         public override string Name { get; set; } = "Object3D";
 
+        public Vector3 Position { get; set; }
+        public Vector3 Scale { get; set; }
+        public Vector3 Rotation { get; set; }
+        public Vector3 Velocity { get; set; }
+        public Vector3 RotationalVelocity { get; set; }
+        public Color4 Color { get; set; }
+        public int VertexCount { get => _vertexCount; }
+        public bool DoRender { get; set; }
 
-        private Vector3 _position;
-        private Vector3 _scale;
-        private Vector3 _rotation;
-        private Vector3 _velocity;
-        private Vector3 _rotationalVelocity;
-        private Color4 _color;
-        private bool _doRender;
+
+
+        public delegate void RenderEvent(object sender, EventArgs e);
+        public event RenderEvent OnRender = delegate { };
+
         private int _vertexCount;
         private Position[] _vertexPositions;
         private Position[] _vertexNormals;
@@ -40,27 +46,6 @@ namespace InstantGameworks.Graphics.GameObjects
         private Face[] _faces;
 
         private DrawVertex[] _sortedVertices;
-
-
-        public Vector3 Position { get => _position; set => _position = value; }
-        public Vector3 Scale { get => _scale; set => _scale = value; }
-        public Vector3 Rotation { get => _rotation; set => _rotation = value; }
-        public Vector3 Velocity { get => _velocity; set => _velocity = value; }
-        public Vector3 RotationalVelocity { get => _rotationalVelocity; set => _rotationalVelocity = value; }
-        public Color4 Color { get => _color; set => _color = value; }
-        public bool DoRender { get => _doRender; set => _doRender = value; }
-        public int VertexCount { get => _vertexCount; set => _vertexCount = value; }
-
-
-        public Position[] VertexPositions { get => _vertexPositions; set => _vertexPositions = value; } // x y z
-        public Position[] VertexNormals { get => _vertexNormals; set => _vertexNormals = value; } // relative x y z
-        public TextureCoordinates[] VertexTextureCoordinates { get => _vertexTextureCoordinates; set => _vertexTextureCoordinates = value; } // u v [w]
-        public Face[] Faces { get => _faces; set => _faces = value; }
-
-
-        public delegate void RenderEvent(object sender, EventArgs e);
-        public event RenderEvent OnRender = delegate { };
-
 
         private bool _initialized;
         private int _objectArray;
@@ -75,14 +60,15 @@ namespace InstantGameworks.Graphics.GameObjects
 
         internal void _init(Position[] _vertPos, TextureCoordinates[] _vertText, Position[] _vertNorm, Face[] _face)
         {
-            //Set default internal values
-            _position = new Vector3(0, 0, 0);
-            _scale = new Vector3(1, 1, 1);
-            _rotation = new Vector3(0, 0, 0);
-            _velocity = new Vector3(0, 0, 0);
-            _rotationalVelocity = new Vector3(0, 0, 0);
-            _color = new Color4(255, 255, 255, 255);
-            _doRender = true;
+            // Set default internal values
+            Position = new Vector3(0, 0, 0);
+            Scale = new Vector3(1, 1, 1);
+            Rotation = new Vector3(0, 0, 0);
+            Velocity = new Vector3(0, 0, 0);
+            RotationalVelocity = new Vector3(0, 0, 0);
+            Color = new Color4(255, 255, 255, 255);
+            _vertexCount = _face.Length * 3;
+            DoRender = true;
 
             _vertexPositions = _vertPos;
             _vertexTextureCoordinates = _vertText;
@@ -90,7 +76,6 @@ namespace InstantGameworks.Graphics.GameObjects
             _faces = _face;
 
             _sortData();
-            _vertexCount = Faces.Length * 3;
 
             _objectArray = GL.GenVertexArray();
 
@@ -133,7 +118,7 @@ namespace InstantGameworks.Graphics.GameObjects
 
                     Position thisPos = _vertexPositions[vertex.PositionIndex - 1];
                     nv.position = new Vector4(thisPos.X, thisPos.Y, thisPos.Z, 1);
-                    
+
 
                     /*
                     if (vertex.NormalIndex != -1)
@@ -176,7 +161,7 @@ namespace InstantGameworks.Graphics.GameObjects
             GL.UniformMatrix4(2, false, ref _modelView);
 
             GL.BindVertexArray(_objectArray);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, _vertexCount);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, VertexCount);
         }
 
         protected override void Dispose(bool disposing)

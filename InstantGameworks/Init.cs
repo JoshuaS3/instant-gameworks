@@ -55,10 +55,10 @@ namespace InstantGameworks
             // Set window settings
             DisplayDevice DefaultDisplay = DisplayDevice.Default;
             GameWindowRefreshRate = 0;//DefaultDisplay.RefreshRate;
-            GameWindowSize = new Vector2(1920, 1080); 
-            GameWindowPosition = new Vector2(0, 00);
+            GameWindowSize = new Vector2(1280, 720); 
+            GameWindowPosition = new Vector2(0, 0);
             GameWindowBorder = WindowBorder.Fixed;
-            GameWindowState = WindowState.Fullscreen;
+            GameWindowState = WindowState.Normal;
 
             // Create window
             Logging.LogEvent("Initializing GameworksWindow");
@@ -96,11 +96,17 @@ namespace InstantGameworks
             Sun.Color = Color4.Red;
             Sun.RelativeDirection = new Vector3(0, -1, 0);
 
+            Console.WriteLine((float)Vector3.Dot(new Vector3(0, 1, 0), new Vector3(-8, -15, -5)));
+
             // Import objects
             var Airplane = GameWindow.AddObject(@"Testing\weirdshape.igwo");
             Airplane.Color = Color4.Red;
             Airplane.Position = new Vector3(0, -.2f, -0.5f);
             Airplane.Scale = new Vector3(.05f, .05f, 0.05f);
+
+            var plane = GameWindow.AddObject(@"Testing\airplane.igwo");
+            plane.Color = Color4.Gray;
+            plane.Position = new Vector3(0, 0.2f, -0.5f);
 
 
             double _lastTime = 0;
