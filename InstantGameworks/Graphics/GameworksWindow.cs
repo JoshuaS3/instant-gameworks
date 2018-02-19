@@ -49,7 +49,7 @@ namespace InstantGameworks.Graphics
             Icon = new Icon(@"Extra\InstantGameworks.ico");
             EnableCaps.Add(EnableCap.DepthTest);
             EnableCaps.Add(EnableCap.Multisample);
-            EnableCaps.Add(EnableCap.LineSmooth);
+            EnableCaps.Add(EnableCap.CullFace);
         }
         
         protected override void OnLoad(EventArgs e)
@@ -110,14 +110,13 @@ namespace InstantGameworks.Graphics
             Camera.AspectRatio = (float)Width / Height;
             Camera.Update();
             _cameraMatrix = Camera.PerspectiveMatrix;
-            GL.UniformMatrix4(3, false, ref _cameraMatrix);
+            GL.UniformMatrix4(4, false, ref _cameraMatrix);
             
             
             
             foreach (var renderObject in RenderObjects)
             {
-                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                GL.Uniform4(1, renderObject.Color);
+                GL.Uniform4(2, renderObject.Color);
                 renderObject.Render();
             }
             

@@ -96,18 +96,11 @@ namespace InstantGameworks
             Sun.Color = Color4.Red;
             Sun.RelativeDirection = new Vector3(0, -1, 0);
 
-            Console.WriteLine((float)Vector3.Dot(new Vector3(0, 1, 0), new Vector3(-8, -15, -5)));
-
             // Import objects
-            var Airplane = GameWindow.AddObject(@"Testing\weirdshape.igwo");
-            Airplane.Color = Color4.Red;
-            Airplane.Position = new Vector3(0, -.2f, -0.5f);
-            Airplane.Scale = new Vector3(.05f, .05f, 0.05f);
-
-            var plane = GameWindow.AddObject(@"Testing\airplane.igwo");
-            plane.Color = Color4.Gray;
-            plane.Position = new Vector3(0, 0.2f, -0.5f);
-
+            var Land = GameWindow.AddObject(@"Testing\sphere.igwo");
+            Land.Color = Color4.Red;
+            Land.Scale = new Vector3(0.5f, 0.5f, 0.5f);
+            Land.Position = new Vector3(0, 0, -1);
 
             double _lastTime = 0;
             double _time = 0;
@@ -118,13 +111,6 @@ namespace InstantGameworks
             }
             void ObjectUpdateFrame(object sender, FrameEventArgs e)
             {
-                Airplane.Rotation = new Vector3((float)Math.Cos(_time * 0.75f) * 0.05f,
-                                                (float)_time*0.5f,
-                                                (float)Math.Sin(_time * 0.5f) * 0.05f);
-                
-                float hue = ((float)_time * 0.1f) % 1f;
-                var color = Color4.FromHsv(new Vector4(hue, 0.5f, 0.5f, 0.5f));
-                //Airplane.Color = color;
             }
 
             // Camera implementation

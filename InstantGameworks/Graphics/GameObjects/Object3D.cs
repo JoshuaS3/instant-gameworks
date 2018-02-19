@@ -30,7 +30,13 @@ namespace InstantGameworks.Graphics.GameObjects
         public Vector3 Rotation { get; set; }
         public Vector3 Velocity { get; set; }
         public Vector3 RotationalVelocity { get; set; }
+
         public Color4 Color { get; set; }
+        public Color4 SpecularColor { get; set; }
+        public Color4 AmbientColor { get; set; }
+        public Color4 EmitColor { get; set; }
+        public float EmitIntensity { get; set; }
+
         public int VertexCount { get => _vertexCount; }
         public bool DoRender { get; set; }
 
@@ -97,6 +103,10 @@ namespace InstantGameworks.Graphics.GameObjects
             GL.VertexArrayAttribBinding(_objectArray, 0, 0);
             GL.EnableVertexArrayAttrib(_objectArray, 0);
             GL.VertexArrayAttribFormat(_objectArray, 0, 4, VertexAttribType.Float, false, 0);
+            
+            GL.VertexArrayAttribBinding(_objectArray, 1, 0);
+            GL.EnableVertexArrayAttrib(_objectArray, 1);
+            GL.VertexArrayAttribFormat(_objectArray, 1, 3, VertexAttribType.Float, false, 16);
 
             GL.VertexArrayVertexBuffer(_objectArray, 0, _vertexPositionBuffer, IntPtr.Zero, DrawVertex.SizeInBytes); //set _positionBuffer as part of _vertexArray
 
@@ -120,18 +130,18 @@ namespace InstantGameworks.Graphics.GameObjects
                     nv.position = new Vector4(thisPos.X, thisPos.Y, thisPos.Z, 1);
 
 
-                    /*
+                    
                     if (vertex.NormalIndex != -1)
                     {
-                        Position thisNorm = VertexNormals[vertex.NormalIndex - 1];
+                        Position thisNorm = _vertexNormals[vertex.NormalIndex - 1];
                         nv.normal = new Vector3(thisNorm.X, thisNorm.Y, thisNorm.Z);
                     }
                     else
                     {
-                        nv.normal = new Vector3(0, 0, 0);
+                        nv.normal = new Vector3(0, 1, 0);
                     }
 
-
+                    /*
                     if (vertex.TextureCoordinatesIndex != -1)
                     {
                         TextureCoordinates thisTexture = VertexTextureCoordinates[vertex.TextureCoordinatesIndex - 1];
@@ -158,7 +168,7 @@ namespace InstantGameworks.Graphics.GameObjects
                          Matrix4.CreateRotationZ(Rotation.Z) *
                          Matrix4.CreateScale(Scale.X, Scale.Y, Scale.Z) *
                          Matrix4.CreateTranslation(Position.X, Position.Y, Position.Z);
-            GL.UniformMatrix4(2, false, ref _modelView);
+            GL.UniformMatrix4(3, false, ref _modelView);
 
             GL.BindVertexArray(_objectArray);
             GL.DrawArrays(PrimitiveType.Triangles, 0, VertexCount);
