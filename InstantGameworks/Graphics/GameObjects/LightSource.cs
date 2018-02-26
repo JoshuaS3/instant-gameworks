@@ -14,14 +14,20 @@ namespace InstantGameworks.Graphics.GameObjects
     {
         public override string ClassName { get; } = "LightSource";
         public override string Name { get; set; } = "LightSource";
-        
-        public virtual Color4 Color { get; set; }
+
+        public virtual Color4 DiffuseColor { get; set; }
+        public virtual Color4 SpecularColor { get; set; }
+        public virtual Color4 AmbientColor { get; set; }
+        public virtual Color4 EmitColor { get; set; }
         public virtual float Intensity { get; set; }
         public virtual bool Enabled { get; set; }
 
         public LightSource()
         {
-            Color = new Color4(255, 255, 255, 255);
+            DiffuseColor = new Color4(255, 255, 255, 255);
+            SpecularColor = new Color4(255, 255, 255, 255);
+            AmbientColor = new Color4(0, 0, 0, 255);
+            EmitColor = new Color4(0, 0, 0, 255);
             Intensity = 1;
             Enabled = true;
         }
@@ -31,8 +37,11 @@ namespace InstantGameworks.Graphics.GameObjects
     {
         public override string ClassName { get; } = "DirectionalLight";
         public override string Name { get; set; } = "DirectionalLight";
-        
-        public override Color4 Color { get; set; }
+
+        public override Color4 DiffuseColor { get; set; }
+        public override Color4 SpecularColor { get; set; }
+        public override Color4 AmbientColor { get; set; }
+        public override Color4 EmitColor { get; set; }
         public override float Intensity { get; set; }
         public override bool Enabled { get; set; }
 
@@ -52,8 +61,11 @@ namespace InstantGameworks.Graphics.GameObjects
     {
         public override string ClassName { get; } = "PointLight";
         public override string Name { get; set; } = "PointLight";
-        
-        public override Color4 Color { get; set; }
+
+        public override Color4 DiffuseColor { get; set; }
+        public override Color4 SpecularColor { get; set; }
+        public override Color4 AmbientColor { get; set; }
+        public override Color4 EmitColor { get; set; }
         public override float Intensity { get; set; }
         public override bool Enabled { get; set; }
         

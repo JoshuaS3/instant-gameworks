@@ -16,17 +16,12 @@ namespace InstantGameworks.Graphics.GameObjects
         public virtual string ClassName { get; } = "Instance";
         public virtual string Name { get; set; } = "Instance";
         public virtual Instance Parent { get => _parent;
-            set { value.SetAsParent(this); _parent = value; }
+            set { value.children.Add(this); _parent = value; }
         }
 
         public Instance this[Instance child]
         {
-            get { return children.Find(x => x.Name == child.Name); }
-        }
-
-        private void SetAsParent(Instance child)
-        {
-            children.Add(child);
+            get { return children.Find(x => x.Name == child.Name) ?? null; }
         }
 
         public override string ToString()

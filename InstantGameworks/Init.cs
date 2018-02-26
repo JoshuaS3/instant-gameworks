@@ -93,7 +93,7 @@ namespace InstantGameworks
             // Establish lighting
             var Sun = GameWindow.AddDirectionalLight();
             Sun.Name = "Sun";
-            Sun.Color = Color4.Red;
+            Sun.DiffuseColor = Color4.Red;
             Sun.RelativeDirection = new Vector3(0, -1, 0);
 
             // Import objects
