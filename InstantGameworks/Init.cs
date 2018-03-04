@@ -86,7 +86,7 @@ namespace InstantGameworks
             // Initialize camera
             StudioCamera Camera = new StudioCamera
             {
-                MoveSensitivity = 0.01f
+                MoveSensitivity = 0.02f
             };
             GameWindow.Camera = Camera;
 
@@ -97,9 +97,9 @@ namespace InstantGameworks
             Sun.RelativeDirection = new Vector3(0, -1, 0);
 
             // Import objects
-            var Land = GameWindow.AddObject(@"Testing\sphere.igwo");
+            var Land = GameWindow.AddObject(@"Testing\teapot.igwo");
             Land.Color = Color4.Red;
-            Land.Position = new Vector3(0, 0, -1);
+            Land.Position = new Vector3(0, -.4f, -1);
 
             double _lastTime = 0;
             double _time = 0;
