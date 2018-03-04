@@ -98,8 +98,8 @@ namespace InstantGameworks
 
             // Import objects
             var Land = GameWindow.AddObject(@"Testing\teapot.igwo");
-            Land.Color = Color4.Red;
-            Land.Position = new Vector3(0, -.4f, -1);
+            Land.Color = Color4.Navy;
+            Land.Position = new Vector3(0, -.6f, -.5f);
 
             double _lastTime = 0;
             double _time = 0;

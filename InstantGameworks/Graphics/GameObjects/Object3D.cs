@@ -165,9 +165,10 @@ namespace InstantGameworks.Graphics.GameObjects
             OnRender(this, EventArgs.Empty);
             _modelView = Matrix4.CreateRotationX(Rotation.X) *
                          Matrix4.CreateRotationY(Rotation.Y) *
-                         Matrix4.CreateRotationZ(Rotation.Z) *
-                         Matrix4.CreateScale(Scale.X, Scale.Y, Scale.Z) *
-                         Matrix4.CreateTranslation(Position.X, Position.Y, Position.Z);
+                         Matrix4.CreateRotationZ(Rotation.Z);
+            GL.UniformMatrix4(5, false, ref _modelView);
+            _modelView *= Matrix4.CreateScale(Scale.X, Scale.Y, Scale.Z) *
+                          Matrix4.CreateTranslation(Position.X, Position.Y, Position.Z);
             GL.UniformMatrix4(3, false, ref _modelView);
 
             GL.BindVertexArray(_objectArray);
