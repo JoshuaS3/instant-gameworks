@@ -86,20 +86,20 @@ namespace InstantGameworks
             // Initialize camera
             StudioCamera Camera = new StudioCamera
             {
-                MoveSensitivity = 0.02f
+                MoveSensitivity = 0.005f
             };
             GameWindow.Camera = Camera;
 
             // Establish lighting
             var Sun = GameWindow.AddDirectionalLight();
             Sun.Name = "Sun";
-            Sun.DiffuseColor = Color4.Red;
-            Sun.RelativeDirection = new Vector3(0, -1, 0);
+            Sun.RelativeDirection = new Vector3(-.2f, -1, -.5f);
 
             // Import objects
-            var Land = GameWindow.AddObject(@"Testing\teapot.igwo");
-            Land.Color = Color4.Navy;
-            Land.Position = new Vector3(0, -.6f, -.5f);
+            var Land = GameWindow.AddObject(@"Testing\monkey.igwo");
+            Land.DiffuseColor = Color4.Navy;
+            Land.Scale = new Vector3(0.2f, 0.2f, 0.2f);
+            Land.Position = new Vector3(0, 0, -.5f);
 
             double _lastTime = 0;
             double _time = 0;

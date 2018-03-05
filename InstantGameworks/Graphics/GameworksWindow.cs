@@ -110,13 +110,51 @@ namespace InstantGameworks.Graphics
             Camera.AspectRatio = (float)Width / Height;
             Camera.Update();
             _cameraMatrix = Camera.PerspectiveMatrix;
-            GL.UniformMatrix4(4, false, ref _cameraMatrix);
-            
+            GL.UniformMatrix4(3, false, ref _cameraMatrix);
+
+            /*
+            struct directionalLight
+            {
+	            vec4 diffuseColor;
+	            vec4 specularColor;
+	            vec4 ambientColor;
+	            vec4 emitColor;
+	            float intensity;
+	            vec3 direction;
+                bool lightActive;
+            };
+            struct pointLight
+            {
+	            vec4 diffuseColor;
+	            vec4 specularColor;
+	            vec4 ambientColor;
+	            vec4 emitColor;
+	            float intensity;
+	            float radius;
+	            vec3 position;
+                bool lightActive;
+            };
+            */
+
+            int dLightCount = 0;
+            foreach (var dLight in _directionalLights) {
+                var baseLoc = GL.GetUniformLocation(_programId, "dLights[0].diffuseColor");
+                GL.Uniform4(baseLoc + 0, dLight.DiffuseColor);
+                GL.Uniform4(baseLoc + 1, dLight.SpecularColor);
+                GL.Uniform4(baseLoc + 2, dLight.AmbientColor);
+                GL.Uniform4(baseLoc + 3, dLight.EmitColor);
+                GL.Uniform1(baseLoc + 4, dLight.Intensity);
+                GL.Uniform3(baseLoc + 5, dLight.RelativeDirection);
+                GL.Uniform1(baseLoc + 6, 1);
+            }
             
             
             foreach (var renderObject in RenderObjects)
             {
-                GL.Uniform4(2, renderObject.Color);
+                GL.Uniform4(5, renderObject.DiffuseColor);
+                GL.Uniform4(6, renderObject.SpecularColor);
+                GL.Uniform4(7, renderObject.AmbientColor);
+                GL.Uniform4(8, renderObject.EmitColor);
                 renderObject.Render();
             }
             

@@ -31,7 +31,7 @@ namespace InstantGameworks.Graphics.GameObjects
         public Vector3 Velocity { get; set; }
         public Vector3 RotationalVelocity { get; set; }
 
-        public Color4 Color { get; set; }
+        public Color4 DiffuseColor { get; set; }
         public Color4 SpecularColor { get; set; }
         public Color4 AmbientColor { get; set; }
         public Color4 EmitColor { get; set; }
@@ -72,7 +72,10 @@ namespace InstantGameworks.Graphics.GameObjects
             Rotation = new Vector3(0, 0, 0);
             Velocity = new Vector3(0, 0, 0);
             RotationalVelocity = new Vector3(0, 0, 0);
-            Color = new Color4(255, 255, 255, 255);
+            DiffuseColor = new Color4(255, 255, 255, 255);
+            SpecularColor = new Color4(230, 230, 230, 0);
+            AmbientColor = new Color4(38, 38, 38, 0);
+            EmitColor = new Color4(0, 0, 0, 0);
             _vertexCount = _face.Length * 3;
             DoRender = true;
 
@@ -166,10 +169,10 @@ namespace InstantGameworks.Graphics.GameObjects
             _modelView = Matrix4.CreateRotationX(Rotation.X) *
                          Matrix4.CreateRotationY(Rotation.Y) *
                          Matrix4.CreateRotationZ(Rotation.Z);
-            GL.UniformMatrix4(5, false, ref _modelView);
+            GL.UniformMatrix4(4, false, ref _modelView);
             _modelView *= Matrix4.CreateScale(Scale.X, Scale.Y, Scale.Z) *
                           Matrix4.CreateTranslation(Position.X, Position.Y, Position.Z);
-            GL.UniformMatrix4(3, false, ref _modelView);
+            GL.UniformMatrix4(2, false, ref _modelView);
 
             GL.BindVertexArray(_objectArray);
             GL.DrawArrays(PrimitiveType.Triangles, 0, VertexCount);
