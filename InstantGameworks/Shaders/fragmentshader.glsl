@@ -32,7 +32,7 @@ layout (location = 6) uniform vec4 specular;
 layout (location = 7) uniform vec4 ambient;
 layout (location = 8) uniform vec4 emit;
 layout (location = 100) uniform directionalLight dLights[8];
-layout (location = 156) uniform pointLight pLights[256];
+layout (location = 156) uniform pointLight pLights[108];
 out vec4 color;
 
 void main(void)
@@ -44,12 +44,19 @@ void main(void)
 		if (dLights[i].lightActive == 1) {
 			vec4 diffuseColor = (diffuse + dLights[i].diffuseColor) * max(  dot(  -dLights[i].direction, adjustedNormal  ),   0.0 );
 	
-			vec3 e = normalize(-eye);
+			vec3 e = normalize(eye);
 			vec3 r = normalize(-reflect(-dLights[i].direction, adjustedNormal));
-			vec4 specColor = (specular + dLights[i].specularColor) * pow(max(dot(r, e), 0.0), 0.3*dLights[i].intensity);
+			vec4 specColor = (specular + dLights[i].specularColor) * pow(max(min(dot(e, r), 1.0), 0.0), 0.3*dLights[i].intensity);
 			specColor = clamp(specColor, 0.0, 1.0);
 
 			final_color += diffuseColor + specColor + emit;
+		}
+	}
+
+	for (int i = 0; i < 108; i++)
+	{
+		if (pLights[i].lightActive == 1) {
+			
 		}
 	}
 

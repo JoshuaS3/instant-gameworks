@@ -137,18 +137,31 @@ namespace InstantGameworks.Graphics
             */
 
             int dLightCount = 0;
-            foreach (var dLight in _directionalLights) {
-                var baseLoc = GL.GetUniformLocation(_programId, "dLights[0].diffuseColor");
+            foreach (var dLight in _directionalLights)
+            {
+                var baseLoc = GL.GetUniformLocation(_programId, "dLights[" + dLightCount++ + "].diffuseColor");
                 GL.Uniform4(baseLoc + 0, dLight.DiffuseColor);
                 GL.Uniform4(baseLoc + 1, dLight.SpecularColor);
                 GL.Uniform4(baseLoc + 2, dLight.AmbientColor);
                 GL.Uniform4(baseLoc + 3, dLight.EmitColor);
                 GL.Uniform1(baseLoc + 4, dLight.Intensity);
                 GL.Uniform3(baseLoc + 5, dLight.RelativeDirection);
-                GL.Uniform1(baseLoc + 6, 1);
+                GL.Uniform1(baseLoc + 6, dLight.Enabled ? 1 : 0);
             }
-            
-            
+            foreach (var pLight in _pointLights)
+            {
+                var baseLoc = GL.GetUniformLocation(_programId, "pLights[" + dLightCount++ + "].diffuseColor");
+                GL.Uniform4(baseLoc + 0, pLight.DiffuseColor);
+                GL.Uniform4(baseLoc + 1, pLight.SpecularColor);
+                GL.Uniform4(baseLoc + 2, pLight.AmbientColor);
+                GL.Uniform4(baseLoc + 3, pLight.EmitColor);
+                GL.Uniform1(baseLoc + 4, pLight.Intensity);
+                GL.Uniform1(baseLoc + 5, pLight.Radius);
+                GL.Uniform3(baseLoc + 6, pLight.Position);
+                GL.Uniform1(baseLoc + 7, pLight.Enabled ? 1 : 0);
+            }
+
+
             foreach (var renderObject in RenderObjects)
             {
                 GL.Uniform4(5, renderObject.DiffuseColor);

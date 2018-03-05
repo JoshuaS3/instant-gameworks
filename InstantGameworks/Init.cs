@@ -86,7 +86,7 @@ namespace InstantGameworks
             // Initialize camera
             StudioCamera Camera = new StudioCamera
             {
-                MoveSensitivity = 0.005f
+                MoveSensitivity = 0.01f
             };
             GameWindow.Camera = Camera;
 
@@ -94,12 +94,27 @@ namespace InstantGameworks
             var Sun = GameWindow.AddDirectionalLight();
             Sun.Name = "Sun";
             Sun.RelativeDirection = new Vector3(-.2f, -1, -.5f);
+            Sun.Intensity = 64;
+            Sun.Enabled = true;
+            var Moon = GameWindow.AddDirectionalLight();
+            Moon.Name = "Moon";
+            Moon.DiffuseColor = Color4.LightBlue;
+            Moon.Intensity = 64;
+            Moon.RelativeDirection = new Vector3(2f, 0.5f, 0.5f);
+            Moon.Enabled = false;
 
             // Import objects
-            var Land = GameWindow.AddObject(@"Testing\monkey.igwo");
+            var Arms = GameWindow.AddObject(@"Testing\arms.igwo");
+            Arms.DiffuseColor = Color4.LightYellow;
+            var Legs = GameWindow.AddObject(@"Testing\legs.igwo");
+            Legs.DiffuseColor = Color4.DeepSkyBlue;
+            var Torso = GameWindow.AddObject(@"Testing\torso.igwo");
+            Torso.DiffuseColor = Color4.Black;
+
+            var Land = GameWindow.AddObject(@"Testing\teapot.igwo");
             Land.DiffuseColor = Color4.Navy;
-            Land.Scale = new Vector3(0.2f, 0.2f, 0.2f);
-            Land.Position = new Vector3(0, 0, -.5f);
+            Land.Scale = new Vector3(1.5f, 1.5f, 1.5f);
+            Land.Position = new Vector3(0, 2.5f, 0);
 
             double _lastTime = 0;
             double _time = 0;
@@ -110,7 +125,7 @@ namespace InstantGameworks
             }
             void ObjectUpdateFrame(object sender, FrameEventArgs e)
             {
-                Land.Rotation += new Vector3(0, 0.01f, 0);
+                //Land.Rotation += new Vector3(0, 0.01f, 0);
             }
 
             // Camera implementation

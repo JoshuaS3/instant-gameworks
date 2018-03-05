@@ -27,7 +27,7 @@ namespace InstantGameworks.Graphics
         public Matrix4 PerspectiveMatrix { get; set; } = new Matrix4();
         public float AspectRatio { get; set; } = 16f / 9f;
 
-        public float FieldOfView { get; set; } = 90;
+        public float FieldOfView { get; set; } = 80;
         public float MinViewDistance { get; set; } = 0.01f;
         public float MaxViewDistance { get; set; } = 4000;
 

@@ -76,6 +76,12 @@
     <None Include="Testing\airplane.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Testing\arms.igwo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Testing\legs.igwo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Testing\monkey.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -83,6 +89,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Testing\teapot.igwo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Testing\torso.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Testing\water.igwo">

@@ -14,7 +14,7 @@ void main(void)
 {
 	fragPos = position;
 	fragNorm = normalize(normal);
-	eye = vec3(modelView * position);
+	eye = vec3(projection * modelView * position);
 
 	gl_Position = projection * modelView * position;
 }
