@@ -28,7 +28,7 @@ namespace InstantGameworks.Graphics
         public float AspectRatio { get; set; } = 16f / 9f;
 
         public float FieldOfView { get; set; } = 80;
-        public float MinViewDistance { get; set; } = 0.01f;
+        public float MinViewDistance { get; set; } = 0.001f;
         public float MaxViewDistance { get; set; } = 4000;
 
 

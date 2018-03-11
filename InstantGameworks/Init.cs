@@ -93,15 +93,9 @@ namespace InstantGameworks
             // Establish lighting
             var Sun = GameWindow.AddDirectionalLight();
             Sun.Name = "Sun";
-            Sun.RelativeDirection = new Vector3(-.2f, -1, -.5f);
-            Sun.Intensity = 64;
+            Sun.RelativeDirection = new Vector3(0, 0, -1);
+            Sun.Intensity = 256;
             Sun.Enabled = true;
-            var Moon = GameWindow.AddDirectionalLight();
-            Moon.Name = "Moon";
-            Moon.DiffuseColor = Color4.LightBlue;
-            Moon.Intensity = 64;
-            Moon.RelativeDirection = new Vector3(2f, 0.5f, 0.5f);
-            Moon.Enabled = false;
 
             // Import objects
             var Arms = GameWindow.AddObject(@"Testing\arms.igwo");
