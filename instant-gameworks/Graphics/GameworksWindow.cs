@@ -8,7 +8,6 @@ using System.Threading;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using System.Drawing;
 using System.IO;
 
 using InstantGameworksObject;
@@ -46,7 +45,7 @@ namespace InstantGameworks.Graphics
         {
             Title += " (OpenGL " + GL.GetString(StringName.Version) + ")";
             CursorVisible = true;
-            Icon = new Icon(@"Extra\InstantGameworks.ico");
+            //Icon = new Icon(@"Extra\InstantGameworks.ico", 32, 32);
             EnableCaps.Add(EnableCap.DepthTest);
             EnableCaps.Add(EnableCap.Multisample);
             EnableCaps.Add(EnableCap.CullFace);

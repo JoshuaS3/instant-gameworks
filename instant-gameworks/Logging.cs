@@ -4,7 +4,6 @@ using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
 using System.Threading;
 
 namespace InstantGameworks
@@ -81,51 +80,6 @@ namespace InstantGameworks
             PrintToOutput(newError);
             FullErrorLog.Insert(LogCount - 1, newError);
             WriteToFile();
-        }
-
-        private static void _displayLog()
-        {
-            Form newForm = new Form();
-            newForm.Width = 600;
-            newForm.Height = 600;
-            newForm.Text = "Instant Gameworks Event Log";
-            newForm.Icon = new System.Drawing.Icon(@"Extra\InstantGameworks.ico");
-            newForm.Focus();
-            MenuStrip tools = new MenuStrip();
-            tools.Top = 0;
-            tools.Parent = newForm;
-            TextBox logDisplay = new TextBox();
-            void updateHeight(object sender, EventArgs e)
-            {
-                logDisplay.Width = newForm.Width;
-                logDisplay.Height = newForm.Height;
-                logDisplay.Top = tools.Height;
-            }
-            updateHeight(null, EventArgs.Empty);
-            newForm.SizeChanged += updateHeight;
-            logDisplay.BackColor = System.Drawing.Color.White;
-            logDisplay.Multiline = true;
-            logDisplay.ScrollBars = ScrollBars.Vertical;
-            logDisplay.ReadOnly = true;
-
-            if (LogFile != null)
-            {
-                foreach (string line in File.ReadAllLines(LogFile))
-                {
-                    logDisplay.AppendText(line);
-                    logDisplay.AppendText(Environment.NewLine);
-                }
-            }
-            logDisplay.Parent = newForm;
-
-            newForm.ShowDialog();
-        }
-
-        public static Thread DisplayLog()
-        {
-            Thread newThread = new Thread(_displayLog);
-            newThread.Start();
-            return newThread;
         }
 
         public static void WriteToFile()

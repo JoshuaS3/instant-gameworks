@@ -49,13 +49,13 @@ namespace InstantGameworks
         {
             Console.Title = "Instant Gameworks";
             Console.WriteLine("Instant Gameworks (c)  2018");
-            
+
             Logging.LogEvent("Main thread startup");
-            
+
             // Set window settings
             DisplayDevice DefaultDisplay = DisplayDevice.Default;
             GameWindowRefreshRate = 0;//DefaultDisplay.RefreshRate;
-            GameWindowSize = new Vector2(1280, 720); 
+            GameWindowSize = new Vector2(1280, 720);
             GameWindowPosition = new Vector2(0, 0);
             GameWindowBorder = WindowBorder.Fixed;
             GameWindowState = WindowState.Normal;
@@ -68,7 +68,7 @@ namespace InstantGameworks
             RunGame.Start();
 
             // Wait for window to initialize
-            SpinWait.SpinUntil( () => GameWindow != null && GameWindow.Exists );
+            SpinWait.SpinUntil(() => GameWindow != null && GameWindow.Exists);
 
 
 
@@ -93,7 +93,7 @@ namespace InstantGameworks
             // Establish lighting
             var Sun = GameWindow.AddDirectionalLight();
             Sun.Name = "Sun";
-            Sun.RelativeDirection = new Vector3(0, 0, -1);
+            Sun.RelativeDirection = new Vector3(1, -2, -1);
             Sun.Intensity = 256;
             Sun.Enabled = true;
 
@@ -105,7 +105,7 @@ namespace InstantGameworks
             var Torso = GameWindow.AddObject(@"Testing\torso.igwo");
             Torso.DiffuseColor = Color4.Black;
 
-            var Land = GameWindow.AddObject(@"Testing\teapot.igwo");
+            var Land = GameWindow.AddObject(@"Testing\elephant.igwo");
             Land.DiffuseColor = Color4.Navy;
             Land.Scale = new Vector3(1.5f, 1.5f, 1.5f);
             Land.Position = new Vector3(0, 2.5f, 0);
@@ -155,7 +155,7 @@ namespace InstantGameworks
                 }
             }
 
-            
+
             void MouseDown(object sender, MouseButtonEventArgs e)
             {
                 if (e.Button == MouseButton.Right)
@@ -246,7 +246,7 @@ namespace InstantGameworks
             RunGame.Join();
             NativeMethods.ConsoleApp.ShowConsole();
             Logging.LogEvent("Shutting down");
-            
+
             /*Logging.WriteToFile();
             Logging.DisplayLog().Join();
             *///end of thread
