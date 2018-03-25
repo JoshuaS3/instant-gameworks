@@ -105,7 +105,7 @@ namespace InstantGameworks
             var Torso = GameWindow.AddObject(@"Testing\torso.igwo");
             Torso.DiffuseColor = Color4.Black;
 
-            var Land = GameWindow.AddObject(@"Testing\elephant.igwo");
+            var Land = GameWindow.AddObject(@"Testing\sphere.igwo");
             Land.DiffuseColor = Color4.Navy;
             Land.Scale = new Vector3(1.5f, 1.5f, 1.5f);
             Land.Position = new Vector3(0, 2.5f, 0);

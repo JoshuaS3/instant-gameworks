@@ -10,12 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="InstantGameworksObject">
-      <HintPath>..\..\igwo-converter\IGWOConverter\InstantGameworksObject.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Extra\InstantGameworks.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -56,6 +50,12 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="InstantGameworksObject">
+      <HintPath>..\..\igwo-converter\IGWOConverter\InstantGameworksObject.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

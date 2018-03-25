@@ -14,7 +14,7 @@ void main(void)
 {
 	fragPos = position;
 	fragNorm = normalize(normal);
-	camera = normalize(-vec3(projection * modelView * position));
+	camera = vec3(0.0, 0.0, 0.0) - (projection * modelView * position).xyz;
 
 	gl_Position = projection * modelView * position;
 }
