@@ -23,7 +23,7 @@ namespace InstantGameworks.Graphics
     public class Camera : ICamera
     {
         public Vector3 Position { get; set; } = Vector3.Zero;
-        public Vector2 Orientation { get; set; } = new Vector2(0, 0);
+        public Vector2 Orientation { get; set; } = new OpenTK.Vector2(0, 0);
         public Matrix4 PerspectiveMatrix { get; set; } = new Matrix4();
         public float AspectRatio { get; set; } = 16f / 9f;
 
@@ -35,27 +35,27 @@ namespace InstantGameworks.Graphics
         public Camera()
         {
             Position = Vector3.Zero;
-            Orientation = new Vector2((float)Math.PI, 0);
+            Orientation = new OpenTK.Vector2((float)System.Math.PI, 0);
         }
         public Camera(Vector3 position)
         {
             Position = position;
-            Orientation = new Vector2();
+            Orientation = new OpenTK.Vector2();
         }
-        public Camera(Vector3 position, Vector2 orientation)
+        public Camera(Vector3 position, OpenTK.Vector2 orientation)
         {
             Position = position;
             Orientation = orientation;
         }
 
 
-        float Radian = (float)Math.PI / 180f;
+        float Radian = (float)System.Math.PI / 180f;
         public Matrix4 Update()
         {
             Vector3 LookAt = new Vector3(
-                (float)(Math.Sin(Orientation.X) * Math.Cos(Orientation.Y)),
-                (float)Math.Sin(Orientation.Y),
-                (float)(Math.Cos(Orientation.X) * Math.Cos(Orientation.Y))
+                (float)(System.Math.Sin(Orientation.X) * System.Math.Cos(Orientation.Y)),
+                (float)System.Math.Sin(Orientation.Y),
+                (float)(System.Math.Cos(Orientation.X) * System.Math.Cos(Orientation.Y))
                 );
             PerspectiveMatrix = Matrix4.LookAt(Position, Position + LookAt, Vector3.UnitY) * Matrix4.CreatePerspectiveFieldOfView(FieldOfView * Radian, AspectRatio, MinViewDistance, MaxViewDistance);
             return PerspectiveMatrix;
@@ -73,14 +73,14 @@ namespace InstantGameworks.Graphics
             DeltaX *= -LookSensitivity;
             DeltaY *= -LookSensitivity;
 
-            Orientation = new Vector2(
-                (Orientation.X + DeltaX) % ((float)Math.PI * 2f),
-                Math.Max(
-                    Math.Min(
-                        Orientation.Y + DeltaY,
-                        (float)Math.PI / 2f - 0.1f
+            Orientation = new OpenTK.Vector2(
+(float)((Orientation.X + DeltaX) % ((float)System.Math.PI * 2f)),
+                System.Math.Max(
+                    System.Math.Min(
+(float)(Orientation.Y + DeltaY),
+                        (float)System.Math.PI / 2f - 0.1f
                     ),
-                    (float)-Math.PI / 2f + 0.1f
+                    (float)-System.Math.PI / 2f + 0.1f
                 )
             );
         }
@@ -88,11 +88,11 @@ namespace InstantGameworks.Graphics
         {
             Vector3 offset = new Vector3();
 
-            Vector3 forward = new Vector3(-(float)Math.Sin(Orientation.X), -(float)Math.Tan(Orientation.Y), -(float)Math.Cos(Orientation.X));
+            Vector3 forward = new Vector3(-(float)System.Math.Sin(Orientation.X), -(float)System.Math.Tan(Orientation.Y), -(float)System.Math.Cos(Orientation.X));
             forward.NormalizeFast();
             Vector3 right = new Vector3(-forward.Z, 0, forward.X);
             right.NormalizeFast();
-            Vector3 up = new Vector3((float)Math.Sin(Orientation.Y), (float)Math.Tan(Orientation.Y), (float)Math.Cos(Orientation.Y));
+            Vector3 up = new Vector3((float)System.Math.Sin(Orientation.Y), (float)System.Math.Tan(Orientation.Y), (float)System.Math.Cos(Orientation.Y));
             up.NormalizeFast();
 
             offset += x * right;

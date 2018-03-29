@@ -20,8 +20,8 @@ namespace InstantGameworks
         private static GameworksWindow GameWindow;
         private static IntPtr GameWindowHandle;
 
-        private static Vector2 GameWindowSize;
-        private static Vector2 GameWindowPosition;
+        private static OpenTK.Vector2 GameWindowSize;
+        private static OpenTK.Vector2 GameWindowPosition;
         private static WindowBorder GameWindowBorder;
         private static WindowState GameWindowState;
         private static float GameWindowRefreshRate;
@@ -55,8 +55,8 @@ namespace InstantGameworks
             // Set window settings
             DisplayDevice DefaultDisplay = DisplayDevice.Default;
             GameWindowRefreshRate = 0;//DefaultDisplay.RefreshRate;
-            GameWindowSize = new Vector2(1280, 720);
-            GameWindowPosition = new Vector2(0, 0);
+            GameWindowSize = new OpenTK.Vector2(1280, 720);
+            GameWindowPosition = new OpenTK.Vector2(0, 0);
             GameWindowBorder = WindowBorder.Fixed;
             GameWindowState = WindowState.Normal;
 
@@ -119,7 +119,7 @@ namespace InstantGameworks
             // Camera implementation
             Dictionary<Key, bool> KeysDown = new Dictionary<Key, bool>() { [Key.W] = false, [Key.A] = false, [Key.S] = false, [Key.D] = false };
 
-            Vector2 LastMousePosition = new Vector2(0, 0);
+            OpenTK.Vector2 LastMousePosition = new OpenTK.Vector2(0, 0);
             bool IsRightMouseDown = false;
             bool IsSettingMousePosition = false;
             void CameraUpdateFrame(object sender, FrameEventArgs e)
@@ -157,7 +157,7 @@ namespace InstantGameworks
                     if (!IsRightMouseDown)
                     {
                         IsRightMouseDown = true;
-                        LastMousePosition = new Vector2(e.X, e.Y);
+                        LastMousePosition = new OpenTK.Vector2(e.X, e.Y);
                     }
                 }
             }
