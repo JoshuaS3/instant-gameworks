@@ -110,6 +110,9 @@ namespace InstantGameworks.Graphics
             Camera.Update();
             _cameraMatrix = Camera.PerspectiveMatrix;
             GL.UniformMatrix4(3, false, ref _cameraMatrix);
+            Matrix4 cameraPosition;
+            Matrix4.CreateTranslation(Camera.Position.X, Camera.Position.Y, Camera.Position.Z, out cameraPosition);
+            GL.UniformMatrix4(9, false, ref cameraPosition);
 
             /*
             struct directionalLight

@@ -93,22 +93,16 @@ namespace InstantGameworks
             // Establish lighting
             var Sun = GameWindow.AddDirectionalLight();
             Sun.Name = "Sun";
-            Sun.RelativeDirection = new Vector3(1, -2, -1);
+            Sun.RelativeDirection = new Vector3(-0.3f, -2, 0.78f);
             Sun.Intensity = 256;
             Sun.Enabled = true;
+            Sun.DiffuseColor = Color4.Black;
 
             // Import objects
-            var Arms = GameWindow.AddObject(@"Testing\arms.igwo");
-            Arms.DiffuseColor = Color4.LightYellow;
-            var Legs = GameWindow.AddObject(@"Testing\legs.igwo");
-            Legs.DiffuseColor = Color4.DeepSkyBlue;
-            var Torso = GameWindow.AddObject(@"Testing\torso.igwo");
-            Torso.DiffuseColor = Color4.Black;
-
-            var Land = GameWindow.AddObject(@"Testing\sphere.igwo");
+            var Land = GameWindow.AddObject(@"Testing\teapot.igwo");
             Land.DiffuseColor = Color4.Navy;
             Land.Scale = new Vector3(1.5f, 1.5f, 1.5f);
-            Land.Position = new Vector3(0, 2.5f, 0);
+            Land.Position = new Vector3(0, 0, 0);
 
             double _lastTime = 0;
             double _time = 0;
@@ -119,7 +113,7 @@ namespace InstantGameworks
             }
             void ObjectUpdateFrame(object sender, FrameEventArgs e)
             {
-                //Land.Rotation += new Vector3(0, 0.01f, 0);
+                Land.Rotation += new Vector3(0, 0.01f, 0);
             }
 
             // Camera implementation

@@ -42,18 +42,21 @@ void main(void)
 
 	for (int i = 0; i < 8; i++) {
 		if (dLights[i].lightActive == 1) {
-			vec4 diffuseColor = (diffuse + dLights[i].diffuseColor) * max(  dot(  -dLights[i].direction, adjustedNormal  ),   0.0 );
+			vec3 adjustedLightDirection = normalize(-dLights[i].direction);
 
-			vec3 E = normalize(camera);
-			vec3 R = reflect(normalize(adjustedNormal), normalize(-dLights[i].direction));
- 
-			vec4 specColor = specular * dLights[i].specularColor * max(dot(adjustedNormal, normalize(-dLights[i].direction)), 0.0) * pow(max(dot(R, E), 0.0), 0.3*dLights[i].intensity);
+			vec4 diffuseColor = (diffuse + dLights[i].diffuseColor) * max(  dot(  adjustedLightDirection, adjustedNormal  ),   0.0 );
+
+			vec3 reflection = normalize(reflect(adjustedLightDirection, adjustedNormal));
+			float angleDifference = dot(reflection, camera);
+
+			vec4 specularColor = vec4(0.0, 0.0, 0.0, 0.0);
+
+			if (angleDifference > 0) {
+				specularColor = (specular + dLights[i].specularColor) * clamp (  pow (  angleDifference, 0.3 * dLights[i].intensity  ), 0.0, 1.0  );
+			}
 
 
-			//vec4 specColor = specular * dLights[i].specularColor * pow(cosAlpha, 0.3*dLights[i].intensity);
-			specColor = clamp(specColor, 0.0, 1.0);
-
-			final_color += diffuseColor + specColor + emit;
+			final_color += diffuseColor + specularColor + emit;
 		}
 	}
 
