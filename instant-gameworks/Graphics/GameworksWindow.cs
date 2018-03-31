@@ -83,7 +83,7 @@ namespace InstantGameworks.Graphics
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             _time += e.Time;
-            Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + Math.Round(1f / e.Time) + "fps";
+            Title = "InstantGameworks (OpenGL " + GL.GetString(StringName.Version) + ") " + System.Math.Round(1f / e.Time) + "fps";
             
             // Adjust viewport
             GL.Viewport(0, 0, Width, Height);

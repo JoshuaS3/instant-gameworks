@@ -79,7 +79,7 @@ namespace InstantGameworks.Math
         {
             get
             {
-                return (float)Math.Sqrt(X * X + Y * Y);
+                return (float)System.Math.Sqrt(X * X + Y * Y);
             }
         }
         public float LengthSquared
@@ -170,7 +170,7 @@ namespace InstantGameworks.Math
 
         public Vector2 Normalize()
         {
-            float distance = (float)Math.Sqrt((X * X) + (Y * Y));
+            float distance = (float)System.Math.Sqrt((X * X) + (Y * Y));
             X = X / distance;
             Y = Y / distance;
             return this;
