@@ -26,6 +26,9 @@
     <None Update="Testing\arms.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Testing\dragon.igwo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Testing\elephant.igwo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

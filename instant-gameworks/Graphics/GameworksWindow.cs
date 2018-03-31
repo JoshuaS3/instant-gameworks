@@ -63,12 +63,12 @@ namespace InstantGameworks.Graphics
             GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
 
             // Create and compile shaders
-            int vertexShader = Shaders.CreateShader(@"Shaders\vertexshader.glsl", ShaderType.VertexShader);
-            int fragmentShader = Shaders.CreateShader(@"Shaders\fragmentshader.glsl", ShaderType.FragmentShader);
+            int vertexShader = ShaderHandler.CreateShader(@"Shaders\vertexshader.glsl", ShaderType.VertexShader);
+            int fragmentShader = ShaderHandler.CreateShader(@"Shaders\fragmentshader.glsl", ShaderType.FragmentShader);
             _shadersList.Add(vertexShader);
             _shadersList.Add(fragmentShader);
 
-            Shaders.CompileShaders(_programId, _shadersList);
+            ShaderHandler.CompileShaders(_programId, _shadersList); // we want both shaders active at once
             
             // Debug
             string DebugInfo = GL.GetProgramInfoLog(_programId);
@@ -113,6 +113,7 @@ namespace InstantGameworks.Graphics
             Matrix4 cameraPosition;
             Matrix4.CreateTranslation(Camera.Position.X, Camera.Position.Y, Camera.Position.Z, out cameraPosition);
             GL.UniformMatrix4(9, false, ref cameraPosition);
+            
 
             /*
             struct directionalLight
@@ -191,7 +192,7 @@ namespace InstantGameworks.Graphics
         {
             foreach (int shader in _shadersList)
             {
-                Shaders.DeleteShader(shader);
+                ShaderHandler.DeleteShader(shader);
             }
             foreach (Object3D obj in RenderObjects)
             {

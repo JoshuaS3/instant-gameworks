@@ -165,7 +165,6 @@ namespace InstantGameworks.Graphics.GameObjects
 
         public void Render()
         {
-            OnRender(this, EventArgs.Empty);
             _modelView = Matrix4.CreateRotationX(Rotation.X) *
                          Matrix4.CreateRotationY(Rotation.Y) *
                          Matrix4.CreateRotationZ(Rotation.Z);
@@ -176,6 +175,7 @@ namespace InstantGameworks.Graphics.GameObjects
 
             GL.BindVertexArray(_objectArray);
             GL.DrawArrays(PrimitiveType.Triangles, 0, VertexCount);
+            OnRender(this, EventArgs.Empty);
         }
 
         protected override void Dispose(bool disposing)

@@ -15,14 +15,6 @@ namespace InstantGameworks.Graphics
             public ObjectStorage(string name) { Name = name; }
         }
 
-        private class Graphics : Folder
-        {
-            
-
-            public Graphics() { }
-            public Graphics(string name) { Name = name; }
-        }
-
         public static Folder CreateGameWorld()
         {
             Folder Game = new Folder("Game");
@@ -32,7 +24,7 @@ namespace InstantGameworks.Graphics
             GraphicalUserInterface.Parent = Game;
             ObjectStorage ObjectStorage = new ObjectStorage("ObjectStorage");
             ObjectStorage.Parent = Game;
-            Graphics Graphics = new Graphics("Graphics");
+            GameObjects.Graphics Graphics = new GameObjects.Graphics("Graphics");
 
             return Game;
         }

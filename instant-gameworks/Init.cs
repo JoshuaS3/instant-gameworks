@@ -20,8 +20,8 @@ namespace InstantGameworks
         private static GameworksWindow GameWindow;
         private static IntPtr GameWindowHandle;
 
-        private static OpenTK.Vector2 GameWindowSize;
-        private static OpenTK.Vector2 GameWindowPosition;
+        private static Vector2 GameWindowSize;
+        private static Vector2 GameWindowPosition;
         private static WindowBorder GameWindowBorder;
         private static WindowState GameWindowState;
         private static float GameWindowRefreshRate;
@@ -55,7 +55,7 @@ namespace InstantGameworks
             // Set window settings
             DisplayDevice DefaultDisplay = DisplayDevice.Default;
             GameWindowRefreshRate = 0;//DefaultDisplay.RefreshRate;
-            GameWindowSize = new OpenTK.Vector2(1280, 720);
+            GameWindowSize = new OpenTK.Vector2(1920, 1080);
             GameWindowPosition = new OpenTK.Vector2(0, 0);
             GameWindowBorder = WindowBorder.Fixed;
             GameWindowState = WindowState.Normal;
@@ -91,21 +91,23 @@ namespace InstantGameworks
             GameWindow.Camera = Camera;
 
             // Establish lighting
+            StudioCamera SunLook = new StudioCamera();
             var Sun = GameWindow.AddDirectionalLight();
             Sun.Name = "Sun";
-            Sun.RelativeDirection = new Vector3(-0.3f, -2, 0.78f);
+            Sun.RelativeDirection = SunLook.LookAt;
             Sun.Intensity = 128;
             Sun.Enabled = true;
             Sun.DiffuseColor = Color4.Black;
 
             // Import objects
-            var Land = GameWindow.AddObject(@"Testing\monkey.igwo");
-            Land.DiffuseColor = Color4.Navy;
+            var Land = GameWindow.AddObject(@"Testing\dragon.igwo");
+            Land.DiffuseColor = Color4.DarkRed;
             Land.Scale = new Vector3(1.5f, 1.5f, 1.5f);
             Land.Position = new Vector3(0, 0, 0);
 
             double _lastTime = 0;
             double _time = 0;
+            float AdjustedSpeedForFramerate = 1f;
             void OnUpdateFrameTimer(object sender, FrameEventArgs e)
             {
                 _lastTime = _time;
@@ -113,7 +115,8 @@ namespace InstantGameworks
             }
             void ObjectUpdateFrame(object sender, FrameEventArgs e)
             {
-                //Land.Rotation += new Vector3(0, 0.01f, 0);
+                Sun.RelativeDirection = SunLook.LookAt;
+                Land.Rotation += new Vector3(0, 0.01f * AdjustedSpeedForFramerate, 0);
             }
 
             // Camera implementation
@@ -121,16 +124,17 @@ namespace InstantGameworks
 
             OpenTK.Vector2 LastMousePosition = new OpenTK.Vector2(0, 0);
             bool IsRightMouseDown = false;
+            bool IsLeftMouseDown = false;
             bool IsSettingMousePosition = false;
             void CameraUpdateFrame(object sender, FrameEventArgs e)
             {
-                if (IsRightMouseDown)
+                if (IsRightMouseDown || IsLeftMouseDown)
                 {
                     IsSettingMousePosition = true;
                     Mouse.SetPosition(LastMousePosition.X + GameWindow.X + 8, LastMousePosition.Y + GameWindow.Y + 31);
                 }
 
-                float AdjustedSpeedForFramerate = 144f / (1f / ((float)_time - (float)_lastTime));
+                AdjustedSpeedForFramerate = 144f / (1f / ((float)_time - (float)_lastTime));
                 if (KeysDown[Key.W] == true)
                 {
                     Camera.Move(0, 0, -AdjustedSpeedForFramerate);
@@ -160,6 +164,14 @@ namespace InstantGameworks
                         LastMousePosition = new OpenTK.Vector2(e.X, e.Y);
                     }
                 }
+                if (e.Button == MouseButton.Left)
+                {
+                    if (!IsLeftMouseDown)
+                    {
+                        IsLeftMouseDown = true;
+                        LastMousePosition = new OpenTK.Vector2(e.X, e.Y);
+                    }
+                }
             }
             void MouseUp(object sender, MouseButtonEventArgs e)
             {
@@ -167,12 +179,20 @@ namespace InstantGameworks
                 {
                     IsRightMouseDown = false;
                 }
+                if (e.Button == MouseButton.Left)
+                {
+                    IsLeftMouseDown = false;
+                }
             }
             void MouseMove(object sender, MouseMoveEventArgs e)
             {
                 if (GameWindow.Focused && IsRightMouseDown && !IsSettingMousePosition)
                 {
                     Camera.AddRotation(e.XDelta, e.YDelta);
+                }
+                if (GameWindow.Focused && IsLeftMouseDown && !IsSettingMousePosition)
+                {
+                    SunLook.AddRotation(e.XDelta, e.YDelta);
                 }
                 IsSettingMousePosition = false;
             }
