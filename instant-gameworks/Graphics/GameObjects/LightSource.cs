@@ -24,8 +24,8 @@ namespace InstantGameworks.Graphics.GameObjects
 
         public LightSource()
         {
-            DiffuseColor = new Color4(0, 0, 0, 255);
-            SpecularColor = new Color4(255, 255, 255, 0);
+            DiffuseColor = new Color4(0, 0, 0, 0);
+            SpecularColor = new Color4(0, 0, 0, 0);
             AmbientColor = new Color4(0, 0, 0, 0);
             EmitColor = new Color4(0, 0, 0, 0);
             Intensity = 64;

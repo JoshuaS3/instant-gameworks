@@ -45,18 +45,19 @@ void main(void)
 			vec3 adjustedLightDirection = normalize(-dLights[i].direction);
 
 			vec4 diffuseColor = (diffuse + dLights[i].diffuseColor) * max(  dot(  adjustedLightDirection, adjustedNormal  ),   0.0 );
+			vec4 ambientColor = (ambient + dLights[i].ambientColor) * max(  dot(  -adjustedLightDirection, adjustedNormal ),   0.0 );
 
 			vec3 reflection = normalize(reflect(adjustedLightDirection, adjustedNormal));
 			float angleDifference = dot(reflection, camera);
 
 			vec4 specularColor = vec4(0.0, 0.0, 0.0, 0.0);
 
-			if (angleDifference > 0) {
+			if (angleDifference > 0 && dot(adjustedLightDirection, adjustedNormal) > 0) {
 				specularColor = (specular + dLights[i].specularColor) * clamp (  pow (  angleDifference, 0.3 * dLights[i].intensity  ), 0.0, 1.0  );
 			}
 
 
-			final_color += diffuseColor + specularColor + emit;
+			final_color += diffuseColor + specularColor + ambientColor + emit;
 		}
 	}
 

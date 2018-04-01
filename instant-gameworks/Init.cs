@@ -83,6 +83,7 @@ namespace InstantGameworks
             //
 
             Logging.LogEvent("Importing resources");
+            
             // Initialize camera
             StudioCamera Camera = new StudioCamera
             {
@@ -92,6 +93,7 @@ namespace InstantGameworks
 
             // Establish lighting
             StudioCamera SunLook = new StudioCamera();
+            SunLook.Orientation = new Vector2(0, (float)-Math.PI/2); // look down
             var Sun = GameWindow.AddDirectionalLight();
             Sun.Name = "Sun";
             Sun.RelativeDirection = SunLook.LookAt;
@@ -102,8 +104,17 @@ namespace InstantGameworks
             // Import objects
             var Land = GameWindow.AddObject(@"Testing\dragon.igwo");
             Land.DiffuseColor = Color4.DarkRed;
+            Land.AmbientColor = new Color4(30, 0, 0, 0);
+            Land.SpecularColor = Color4.White;
             Land.Scale = new Vector3(1.5f, 1.5f, 1.5f);
-            Land.Position = new Vector3(0, 0, 0);
+
+
+
+
+
+
+
+
 
             double _lastTime = 0;
             double _time = 0;
@@ -116,12 +127,12 @@ namespace InstantGameworks
             void ObjectUpdateFrame(object sender, FrameEventArgs e)
             {
                 Sun.RelativeDirection = SunLook.LookAt;
-                Land.Rotation += new Vector3(0, 0.01f * AdjustedSpeedForFramerate, 0);
+                Land.Rotation += new Vector3(0, 0.005f * AdjustedSpeedForFramerate, 0);
             }
 
             // Camera implementation
             Dictionary<Key, bool> KeysDown = new Dictionary<Key, bool>() { [Key.W] = false, [Key.A] = false, [Key.S] = false, [Key.D] = false };
-
+            
             OpenTK.Vector2 LastMousePosition = new OpenTK.Vector2(0, 0);
             bool IsRightMouseDown = false;
             bool IsLeftMouseDown = false;
