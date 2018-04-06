@@ -9,6 +9,8 @@ namespace InstantGameworks.Graphics.GameObjects
 {
     public class Instance : IDisposable
     {
+        protected static int _programId;
+        private static bool init = false;
         private Instance _parent = null;
 
         private List<Instance> children = new List<Instance>();
@@ -17,6 +19,15 @@ namespace InstantGameworks.Graphics.GameObjects
         public virtual string Name { get; set; } = "Instance";
         public virtual Instance Parent { get => _parent;
             set { value.children.Add(this); _parent = value; }
+        }
+
+        public static void AssignPID(int pid)
+        {
+            if (!init)
+            {
+                init = true;
+                _programId = pid;
+            }
         }
 
         public Instance this[Instance child]

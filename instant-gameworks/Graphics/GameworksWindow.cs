@@ -57,6 +57,7 @@ namespace InstantGameworks.Graphics
 
             // Create program
             _programId = GL.CreateProgram();
+            Instance.AssignPID(_programId);
 
             // Adjust render settings
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
@@ -104,6 +105,7 @@ namespace InstantGameworks.Graphics
 
             // Render frame
             GL.UseProgram(_programId);
+            ShaderHandler.CompileShaders(_programId, _shadersList);
 
             // Update camera
             Camera.AspectRatio = (float)Width / Height;
@@ -113,31 +115,6 @@ namespace InstantGameworks.Graphics
             Matrix4 cameraPosition;
             Matrix4.CreateTranslation(Camera.Position.X, Camera.Position.Y, Camera.Position.Z, out cameraPosition);
             GL.UniformMatrix4(9, false, ref cameraPosition);
-            
-
-            /*
-            struct directionalLight
-            {
-	            vec4 diffuseColor;
-	            vec4 specularColor;
-	            vec4 ambientColor;
-	            vec4 emitColor;
-	            float intensity;
-	            vec3 direction;
-                bool lightActive;
-            };
-            struct pointLight
-            {
-	            vec4 diffuseColor;
-	            vec4 specularColor;
-	            vec4 ambientColor;
-	            vec4 emitColor;
-	            float intensity;
-	            float radius;
-	            vec3 position;
-                bool lightActive;
-            };
-            */
 
             int dLightCount = 0;
             foreach (var dLight in _directionalLights)
