@@ -29,6 +29,7 @@ namespace InstantGameworks.Graphics
         public List<EnableCap> EnableCaps { get; } = new List<EnableCap>(); // EnableCaps currently in use
         public Camera Camera { get; set; } = new Camera(); // Current Camera object in use by the program
         public List<Object3D> RenderObjects { get; } = new List<Object3D>(); // The program's current render queue
+        public List<GuiHolder> GuiObjects { get; } = new List<GuiHolder>();
 
 
         // Initialization defaults
@@ -150,6 +151,11 @@ namespace InstantGameworks.Graphics
                 GL.Uniform4(8, renderObject.EmitColor);
                 renderObject.Render();
             }
+
+            foreach (var guiHolder in GuiObjects)
+            {
+                guiHolder.Render();
+            }
             
             SwapBuffers();
             base.OnRenderFrame(e);
@@ -193,6 +199,19 @@ namespace InstantGameworks.Graphics
             RenderFrame += Add;
             while (newObject == null) { }
             return newObject;
+        }
+        public GuiHolder AddGui()
+        {
+            GuiHolder guiHolder = null;
+            void Add(object sender, FrameEventArgs e)
+            {
+                guiHolder = new GuiHolder();
+                GuiObjects.Add(guiHolder);
+                RenderFrame -= Add;
+            }
+            RenderFrame += Add;
+            while (guiHolder == null) { }
+            return guiHolder;
         }
 
         public PointLight AddPointLight()

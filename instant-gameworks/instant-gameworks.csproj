@@ -17,6 +17,12 @@
     <None Update="Shaders\fragmentshader.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Shaders\uishader.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Shaders\uishaderColor.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Shaders\vertexshader.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

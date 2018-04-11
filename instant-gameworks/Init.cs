@@ -107,6 +107,9 @@ namespace InstantGameworks
             Land.AmbientColor = new Color4(30, 0, 0, 0);
             Land.SpecularColor = Color4.White;
             Land.Scale = new Vector3(1.5f, 1.5f, 1.5f);
+            
+            var GuiHolder = GameWindow.AddGui();
+            GuiHolder.Color = Color.Black;
 
 
 
