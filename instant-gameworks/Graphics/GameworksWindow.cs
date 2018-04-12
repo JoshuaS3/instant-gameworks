@@ -142,20 +142,22 @@ namespace InstantGameworks.Graphics
                 GL.Uniform1(baseLoc + 7, pLight.Enabled ? 1 : 0);
             }
 
+            foreach (var guiHolder in GuiObjects)
+            {
+                guiHolder.Render();
+            }
+
 
             foreach (var renderObject in RenderObjects)
             {
+                ShaderHandler.CompileShaders(_programId, _shadersList);
                 GL.Uniform4(5, renderObject.DiffuseColor);
                 GL.Uniform4(6, renderObject.SpecularColor);
                 GL.Uniform4(7, renderObject.AmbientColor);
                 GL.Uniform4(8, renderObject.EmitColor);
                 renderObject.Render();
             }
-
-            foreach (var guiHolder in GuiObjects)
-            {
-                guiHolder.Render();
-            }
+            
             
             SwapBuffers();
             base.OnRenderFrame(e);

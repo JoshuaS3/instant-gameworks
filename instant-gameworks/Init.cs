@@ -109,7 +109,7 @@ namespace InstantGameworks
             Land.Scale = new Vector3(1.5f, 1.5f, 1.5f);
             
             var GuiHolder = GameWindow.AddGui();
-            GuiHolder.Color = Color.Black;
+            GuiHolder.Color = new Color4(128, 128, 128, 255);
 
 
 

@@ -1,11 +1,11 @@
 ﻿#version 450 core
 #line 2 "uishaderColor.glsl"
 
-in vec4 vsColor;
+layout (location = 1) uniform vec4 solidColor;
 out vec4 color;
 
 
 void main(void)
 {
-	color = vsColor;
+	color = solidColor;
 }

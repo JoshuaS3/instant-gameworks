@@ -33,17 +33,7 @@ namespace InstantGameworks.Graphics.GameObjects
         {
             _objectArray = GL.GenVertexArray();
             _vertexPositionBuffer = GL.GenBuffer();
-
-            Vertex[] _vertices = {
-                new Vertex(new Vector4(-0.5f,  0.5f, 0.5f, 1)),
-                new Vertex(new Vector4( 0.5f,  0.5f, 0.5f, 1)),
-                new Vertex(new Vector4(-0.5f, -0.5f, 0.5f, 1)),
-
-                new Vertex(new Vector4( 0.5f,  0.5f, 0.5f, 1)),
-                new Vertex(new Vector4(-0.5f, -0.5f, 0.5f, 1)),
-                new Vertex(new Vector4(0.5f,  -0.5f, 0.5f, 1)),
-            };
-
+            
             GL.BindVertexArray(_objectArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexPositionBuffer);
             GL.NamedBufferStorage(_vertexPositionBuffer, _vertices.Length * DrawVertex.SizeInBytes, _vertices, BufferStorageFlags.DynamicStorageBit);
@@ -74,14 +64,18 @@ namespace InstantGameworks.Graphics.GameObjects
         }
         private int _objectArray;
         private int _vertexPositionBuffer;
-        private Vertex[] _vertices;
+        private Vertex[] _vertices = new Vertex[]{
+                new Vertex(new Vector4(-0.25f,  0.25f, -0.5f, 1f)),
+                new Vertex(new Vector4(0,  -0.25f, -0.5f, 1f)),
+                new Vertex(new Vector4(0.25f,  0.25f, -0.5f, 1f)),
+            };
         public void Render()
         {
             ShaderHandler.CompileShaders(_programId, _shaders); // we want both shaders active at once
 
             GL.Uniform4(1, Color);
             GL.BindVertexArray(_objectArray);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
         }
     }
 }
