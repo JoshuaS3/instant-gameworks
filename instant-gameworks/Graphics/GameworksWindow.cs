@@ -70,6 +70,7 @@ namespace InstantGameworks.Graphics
             _shadersList.Add(vertexShader);
             _shadersList.Add(fragmentShader);
 
+            GL.UseProgram(_programId);
             ShaderHandler.CompileShaders(_programId, _shadersList); // we want both shaders active at once
             
             // Debug
@@ -91,9 +92,9 @@ namespace InstantGameworks.Graphics
             GL.Viewport(0, 0, Width, Height);
 
             // Clear frame
-            GL.ClearColor(Color.CornflowerBlue);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            
+            GL.ClearColor(Color.CornflowerBlue);
+
             // Reset caps
             foreach (EnableCap cap in Enum.GetValues(typeof(EnableCap)))
             {
@@ -103,7 +104,6 @@ namespace InstantGameworks.Graphics
             {
                 GL.Enable(cap);
             }
-
             // Render frame
             GL.UseProgram(_programId);
             ShaderHandler.CompileShaders(_programId, _shadersList);
@@ -116,6 +116,8 @@ namespace InstantGameworks.Graphics
             Matrix4 cameraPosition;
             Matrix4.CreateTranslation(Camera.Position.X, Camera.Position.Y, Camera.Position.Z, out cameraPosition);
             GL.UniformMatrix4(9, false, ref cameraPosition);
+
+            
 
             int dLightCount = 0;
             foreach (var dLight in _directionalLights)
@@ -141,24 +143,26 @@ namespace InstantGameworks.Graphics
                 GL.Uniform3(baseLoc + 6, pLight.Position);
                 GL.Uniform1(baseLoc + 7, pLight.Enabled ? 1 : 0);
             }
-
-            foreach (var guiHolder in GuiObjects)
-            {
-                guiHolder.Render();
-            }
-
-
             foreach (var renderObject in RenderObjects)
             {
-                ShaderHandler.CompileShaders(_programId, _shadersList);
                 GL.Uniform4(5, renderObject.DiffuseColor);
                 GL.Uniform4(6, renderObject.SpecularColor);
                 GL.Uniform4(7, renderObject.AmbientColor);
                 GL.Uniform4(8, renderObject.EmitColor);
                 renderObject.Render();
             }
-            
-            
+
+
+            // Render frame
+            GL.UseProgram(GuiHolder._pid); // use new program
+            ShaderHandler.CompileShaders(GuiHolder._pid, GuiHolder._shaders); // apply separate shaders to said program
+            foreach (var guiHolder in GuiObjects)
+            {
+                guiHolder.Render(); // render
+            }
+
+
+
             SwapBuffers();
             base.OnRenderFrame(e);
         }

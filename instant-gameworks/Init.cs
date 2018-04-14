@@ -131,6 +131,10 @@ namespace InstantGameworks
             {
                 Sun.RelativeDirection = SunLook.LookAt;
                 Land.Rotation += new Vector3(0, 0.005f * AdjustedSpeedForFramerate, 0);
+                GuiHolder.Color = Color4.FromHsv(new Vector4(DateTime.Now.Millisecond / 1000f, 0.8f, 1f, 0.5f));
+                GuiHolder.AbsoluteSize = new Vector2((float)Math.Sin(DateTime.Now.Millisecond/1000f), (float)Math.Cos(DateTime.Now.Millisecond/1000f));
+                Console.WriteLine(GuiHolder.AbsoluteSize);
+                GuiHolder.AbsolutePosition = new Vector2((float)Math.Sin(DateTime.Now.Millisecond/1000f), (float)Math.Cos(DateTime.Now.Millisecond/1000f));
             }
 
             // Camera implementation
