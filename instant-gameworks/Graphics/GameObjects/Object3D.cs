@@ -101,7 +101,7 @@ namespace InstantGameworks.Graphics.GameObjects
         {
             GL.BindVertexArray(_objectArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexPositionBuffer);
-            GL.NamedBufferStorage(_vertexPositionBuffer, _sortedVertices.Length * DrawVertex.SizeInBytes, _sortedVertices, BufferStorageFlags.DynamicStorageBit);
+            GL.NamedBufferData(_vertexPositionBuffer, _sortedVertices.Length * DrawVertex.SizeInBytes, _sortedVertices, BufferUsageHint.StaticDraw);
 
             GL.VertexArrayAttribBinding(_objectArray, 0, 0);
             GL.EnableVertexArrayAttrib(_objectArray, 0);

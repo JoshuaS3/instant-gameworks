@@ -54,12 +54,12 @@ namespace InstantGameworks.Graphics.GameObjects
         private readonly int _vertexPositionBuffer;
         private Vector4[] _vertices;
 
-        private void _updateBuffers()
+        public void _updateBuffers()
         {
             GL.BindVertexArray(_objectArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexPositionBuffer);
-            GL.NamedBufferStorage(_vertexPositionBuffer, _vertices.Length * Vector4.SizeInBytes, _vertices, BufferStorageFlags.DynamicStorageBit);
-
+            GL.NamedBufferData(_vertexPositionBuffer, _vertices.Length * Vector4.SizeInBytes, _vertices, BufferUsageHint.DynamicDraw);
+            
             GL.VertexArrayAttribBinding(_objectArray, 0, 0);
             GL.EnableVertexArrayAttrib(_objectArray, 0);
             GL.VertexArrayAttribFormat(_objectArray, 0, 4, VertexAttribType.Float, false, 0);
@@ -67,12 +67,16 @@ namespace InstantGameworks.Graphics.GameObjects
             GL.VertexArrayVertexBuffer(_objectArray, 0, _vertexPositionBuffer, IntPtr.Zero, Vector4.SizeInBytes);
         }
 
-        private void _updateSizeAndPosition()
+        public void _updateSizeAndPosition()
         {
-            Vector2 _topLeft = _absolutePosition;
-            Vector2 _topRight = _absolutePosition + new Vector2(_absoluteSize.X, 0);
-            Vector2 _bottomLeft = _absolutePosition + new Vector2(0, _absoluteSize.Y);
-            Vector2 _bottomRight = _absolutePosition + new Vector2(_absoluteSize.X, _absoluteSize.Y);
+            Vector2 offset = new Vector2(1f, -1f);
+            Vector2 adjustedPosition = (_absolutePosition + offset) / 2f;
+            Vector2 adjustedSize = _absoluteSize * 2f;
+
+            Vector2 _topLeft = adjustedPosition;
+            Vector2 _topRight = adjustedPosition + new Vector2(adjustedSize.X, 0);
+            Vector2 _bottomLeft = adjustedPosition + new Vector2(0, -adjustedSize.Y);
+            Vector2 _bottomRight = adjustedPosition + new Vector2(adjustedSize.X, -adjustedSize.Y);
             _vertices = new Vector4[]
             {
                 new Vector4(_topLeft.X, _topLeft.Y, 0, 1),
@@ -80,8 +84,8 @@ namespace InstantGameworks.Graphics.GameObjects
                 new Vector4(_bottomLeft.X, _bottomLeft.Y, 0, 1),
 
                 new Vector4(_topRight.X, _topRight.Y, 0, 1),
-                new Vector4(_bottomRight.X, _bottomRight.Y, 0, 1),
                 new Vector4(_bottomLeft.X, _bottomLeft.Y, 0, 1),
+                new Vector4(_bottomRight.X, _bottomRight.Y, 0, 1),
             };
         }
 

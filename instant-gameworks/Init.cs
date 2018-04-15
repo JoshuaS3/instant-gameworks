@@ -110,8 +110,9 @@ namespace InstantGameworks
             
             var GuiHolder = GameWindow.AddGui();
             GuiHolder.Color = new Color4(128, 128, 128, 255);
-
-
+            GuiHolder.AbsoluteSize = new Vector2(0f, 0f);
+            GuiHolder.AbsolutePosition = new Vector2(-0f, 0.5f);
+            
 
 
 
@@ -132,9 +133,8 @@ namespace InstantGameworks
                 Sun.RelativeDirection = SunLook.LookAt;
                 Land.Rotation += new Vector3(0, 0.005f * AdjustedSpeedForFramerate, 0);
                 GuiHolder.Color = Color4.FromHsv(new Vector4(DateTime.Now.Millisecond / 1000f, 0.8f, 1f, 0.5f));
-                GuiHolder.AbsoluteSize = new Vector2((float)Math.Sin(DateTime.Now.Millisecond/1000f), (float)Math.Cos(DateTime.Now.Millisecond/1000f));
-                Console.WriteLine(GuiHolder.AbsoluteSize);
-                GuiHolder.AbsolutePosition = new Vector2((float)Math.Sin(DateTime.Now.Millisecond/1000f), (float)Math.Cos(DateTime.Now.Millisecond/1000f));
+                //GuiHolder.AbsoluteSize = new Vector2((float)Math.Sin(_time), (float)Math.Cos(_time))/2f;
+                //GuiHolder.AbsolutePosition = new Vector2((float)Math.Cos(_time), (float)Math.Sin(_time))/2f;
             }
 
             // Camera implementation

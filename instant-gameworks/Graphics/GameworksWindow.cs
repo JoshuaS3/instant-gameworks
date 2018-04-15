@@ -156,6 +156,7 @@ namespace InstantGameworks.Graphics
             // Render frame
             GL.UseProgram(GuiHolder._pid); // use new program
             ShaderHandler.CompileShaders(GuiHolder._pid, GuiHolder._shaders); // apply separate shaders to said program
+            GL.Disable(EnableCap.CullFace);
             foreach (var guiHolder in GuiObjects)
             {
                 guiHolder.Render(); // render
