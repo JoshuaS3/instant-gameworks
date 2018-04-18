@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*  Copyright (c) Joshua Stockin 2018
+ *
+ *  This file is part of Instant Gameworks.
+ *
+ *  Instant Gameworks is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Instant Gameworks is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Instant Gameworks.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -7,6 +26,7 @@ using System.Threading;
 using OpenTK;
 using OpenTK.Input;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL4;
 
 using InstantGameworks;
 using InstantGameworks.Graphics;
@@ -29,7 +49,6 @@ namespace InstantGameworks
         [STAThread]
         private static void CreateGameworksWindow()
         {
-
             GameWindow = new GameworksWindow();
             GameWindowHandle = GameWindow.WindowInfo.Handle;
 
@@ -41,6 +60,8 @@ namespace InstantGameworks
             GameWindow.Y = (int)GameWindowPosition.Y;
 
             GameWindow.VSync = VSyncMode.On;
+
+            GameWindow.CursorVisible = false;
             GameWindow.Run(GameWindowRefreshRate, GameWindowRefreshRate);
         }
 
@@ -57,8 +78,8 @@ namespace InstantGameworks
             GameWindowRefreshRate = 0;//DefaultDisplay.RefreshRate;
             GameWindowSize = new OpenTK.Vector2(1920, 1080);
             GameWindowPosition = new OpenTK.Vector2(0, 0);
-            GameWindowBorder = WindowBorder.Fixed;
-            GameWindowState = WindowState.Normal;
+            GameWindowBorder = WindowBorder.Hidden;
+            GameWindowState = WindowState.Fullscreen;
 
             // Create window
             Logging.LogEvent("Initializing GameworksWindow");
@@ -107,15 +128,19 @@ namespace InstantGameworks
             Land.AmbientColor = new Color4(30, 0, 0, 0);
             Land.SpecularColor = Color4.White;
             Land.Scale = new Vector3(1.5f, 1.5f, 1.5f);
-            
+
             var GuiHolder = GameWindow.AddGui();
             GuiHolder.Color = new Color4(128, 128, 128, 255);
-            GuiHolder.AbsoluteSize = new Vector2(0f, 0f);
-            GuiHolder.AbsolutePosition = new Vector2(-0f, 0.5f);
+            GuiHolder.AbsoluteSize = new Vector2(32f / 1920f, 2f / 1080f);
+            GuiHolder.AbsolutePosition = new Vector2(0.5f - 16f / 1920f, 0.5f - 1f / 1080f);
+
+
+            var G2 = GameWindow.AddGui();
+            G2.Color = new Color4(128, 128, 128, 255);
+            G2.AbsoluteSize = new Vector2(2f / 1920f, 32f / 1080f);
+            G2.AbsolutePosition = new Vector2(0.5f - 1f / 1920f, 0.5f - 16f / 1080f);
+
             
-
-
-
 
 
 
@@ -133,8 +158,7 @@ namespace InstantGameworks
                 Sun.RelativeDirection = SunLook.LookAt;
                 Land.Rotation += new Vector3(0, 0.005f * AdjustedSpeedForFramerate, 0);
                 GuiHolder.Color = Color4.FromHsv(new Vector4(DateTime.Now.Millisecond / 1000f, 0.8f, 1f, 0.5f));
-                //GuiHolder.AbsoluteSize = new Vector2((float)Math.Sin(_time), (float)Math.Cos(_time))/2f;
-                //GuiHolder.AbsolutePosition = new Vector2((float)Math.Cos(_time), (float)Math.Sin(_time))/2f;
+                G2.Color = Color4.FromHsv(new Vector4(DateTime.Now.Millisecond / 1000f, 0.8f, 1f, 0.5f));
             }
 
             // Camera implementation
@@ -144,12 +168,14 @@ namespace InstantGameworks
             bool IsRightMouseDown = false;
             bool IsLeftMouseDown = false;
             bool IsSettingMousePosition = false;
+
+            Vector2 CurrentMousePosition = new Vector2(0, 0);
             void CameraUpdateFrame(object sender, FrameEventArgs e)
             {
                 if (IsRightMouseDown || IsLeftMouseDown)
                 {
                     IsSettingMousePosition = true;
-                    Mouse.SetPosition(LastMousePosition.X + GameWindow.X + 8, LastMousePosition.Y + GameWindow.Y + 31);
+                    Mouse.SetPosition(LastMousePosition.X + GameWindow.X, LastMousePosition.Y + GameWindow.Y);
                 }
 
                 AdjustedSpeedForFramerate = 144f / (1f / ((float)_time - (float)_lastTime));
@@ -169,6 +195,10 @@ namespace InstantGameworks
                 {
                     Camera.Move(-AdjustedSpeedForFramerate, 0, 0);
                 }
+
+                Vector2 mousePos = new Vector2(CurrentMousePosition.X + GameWindow.X, CurrentMousePosition.Y + GameWindow.Y);
+                GuiHolder.AbsolutePosition = new Vector2((mousePos.X/1920f) - (16 / 1920f), (mousePos.Y/1080f) - (1 / 1080f));
+                G2.AbsolutePosition = new Vector2((mousePos.X/1920f) - (1 / 1920f), (mousePos.Y/1080f) - (16 / 1080f));
             }
 
 
@@ -213,6 +243,7 @@ namespace InstantGameworks
                     SunLook.AddRotation(e.XDelta, e.YDelta);
                 }
                 IsSettingMousePosition = false;
+                CurrentMousePosition = new Vector2(e.X, e.Y);
             }
             void KeyDown(object sender, KeyboardKeyEventArgs e)
             {

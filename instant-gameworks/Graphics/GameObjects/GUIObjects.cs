@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*  Copyright (c) Joshua Stockin 2018
+ *
+ *  This file is part of Instant Gameworks.
+ *
+ *  Instant Gameworks is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Instant Gameworks is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Instant Gameworks.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using OpenTK;
@@ -69,23 +88,23 @@ namespace InstantGameworks.Graphics.GameObjects
 
         public void _updateSizeAndPosition()
         {
-            Vector2 offset = new Vector2(1f, -1f);
-            Vector2 adjustedPosition = (_absolutePosition + offset) / 2f;
-            Vector2 adjustedSize = _absoluteSize * 2f;
+            Vector2 offset = new Vector2(-1f, 1f);
+            Vector2 adjustedPosition = (_absolutePosition * new Vector2(2, -2)) + offset;
+            Vector2 adjustedSize = (_absoluteSize) * new Vector2(2, -2);
 
             Vector2 _topLeft = adjustedPosition;
             Vector2 _topRight = adjustedPosition + new Vector2(adjustedSize.X, 0);
-            Vector2 _bottomLeft = adjustedPosition + new Vector2(0, -adjustedSize.Y);
-            Vector2 _bottomRight = adjustedPosition + new Vector2(adjustedSize.X, -adjustedSize.Y);
+            Vector2 _bottomLeft = adjustedPosition + new Vector2(0, adjustedSize.Y);
+            Vector2 _bottomRight = adjustedPosition + new Vector2(adjustedSize.X, adjustedSize.Y);
             _vertices = new Vector4[]
             {
-                new Vector4(_topLeft.X, _topLeft.Y, 0, 1),
-                new Vector4(_topRight.X, _topRight.Y, 0, 1),
-                new Vector4(_bottomLeft.X, _bottomLeft.Y, 0, 1),
+                new Vector4(_topLeft.X, _topLeft.Y, 0.5f, 1),
+                new Vector4(_topRight.X, _topRight.Y, 0.5f, 1),
+                new Vector4(_bottomLeft.X, _bottomLeft.Y, 0.5f, 1),
 
-                new Vector4(_topRight.X, _topRight.Y, 0, 1),
-                new Vector4(_bottomLeft.X, _bottomLeft.Y, 0, 1),
-                new Vector4(_bottomRight.X, _bottomRight.Y, 0, 1),
+                new Vector4(_topRight.X, _topRight.Y, 0.5f, 1),
+                new Vector4(_bottomLeft.X, _bottomLeft.Y, 0.5f, 1),
+                new Vector4(_bottomRight.X, _bottomRight.Y, 0.5f, 1),
             };
         }
 
